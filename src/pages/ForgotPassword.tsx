@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import authService from '../services/authService';
+import { toast } from 'react-hot-toast';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle password reset email logic here
-    setIsSubmitted(true);
+    setIsLoading(true);
+
+    try {
+      await authService.forgotPassword(email);
+      setIsSubmitted(true);
+      toast.success('Reset instructions sent to your email');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to send reset instructions');
+      setIsSubmitted(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -62,13 +75,15 @@ const ForgotPassword = () => {
                       className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
                       placeholder="Enter your email"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3 rounded-xl font-medium hover:from-violet-700 hover:to-cyan-700 transition-all duration-200 shadow-lg shadow-violet-500/25"
+                    className="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3 rounded-xl font-medium hover:from-violet-700 hover:to-cyan-700 transition-all duration-200 shadow-lg shadow-violet-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isLoading}
                   >
-                    Send Reset Instructions
+                    {isLoading ? 'Sending...' : 'Send Reset Instructions'}
                   </button>
                 </form>
               </>
@@ -93,6 +108,7 @@ const ForgotPassword = () => {
                   <button 
                     onClick={() => setIsSubmitted(false)}
                     className="text-violet-400 hover:text-violet-300"
+                    disabled={isLoading}
                   >
                     try again
                   </button>

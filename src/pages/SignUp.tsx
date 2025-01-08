@@ -1,14 +1,40 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom';
+import authService from '../services/authService';
+import { toast } from 'react-hot-toast';
 
 const SignUp = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle signup logic here
+    setIsLoading(true);
+
+    try {
+      await authService.register(formData);
+      toast.success('Registration successful!');
+      navigate('/dashboard');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Registration failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -28,13 +54,15 @@ const SignUp = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-8"
           >
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-500 to-cyan-500 text-transparent bg-clip-text mb-2">
-              VoiceAI
-            </h1>
-            <p className="text-white/60">Your Mind, Immortalized</p>
+            <Link to="/" className="inline-block">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-500 to-cyan-500 text-transparent bg-clip-text mb-2">
+                VoiceAI
+              </h1>
+              <p className="text-white/60">Your Mind, Immortalized</p>
+            </Link>
           </motion.div>
 
-          {/* Signup Form */}
+          {/* Sign Up Form */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -43,18 +71,37 @@ const SignUp = () => {
           >
             <h2 className="text-2xl font-bold mb-6 text-center">Create your account</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-                  placeholder="Enter your name"
-                  required
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-2">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                    placeholder="John"
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-2">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                    placeholder="Doe"
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-white/80 mb-2">
@@ -62,11 +109,13 @@ const SignUp = () => {
                 </label>
                 <input
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-                  placeholder="Enter your email"
+                  placeholder="john@example.com"
                   required
+                  disabled={isLoading}
                 />
               </div>
               <div>
@@ -75,22 +124,26 @@ const SignUp = () => {
                 </label>
                 <input
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-                  placeholder="Create a password"
+                  placeholder="••••••••"
                   required
+                  disabled={isLoading}
                 />
               </div>
+
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3 rounded-xl font-medium hover:from-violet-700 hover:to-cyan-700 transition-all duration-200 shadow-lg shadow-violet-500/25"
+                className="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3 rounded-xl font-medium hover:from-violet-700 hover:to-cyan-700 transition-all duration-200 shadow-lg shadow-violet-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isLoading}
               >
-                Create Account
+                {isLoading ? 'Creating account...' : 'Create account'}
               </button>
             </form>
 
-            {/* Social Signup */}
+            {/* Social Sign Up */}
             <div className="mt-8">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
@@ -102,11 +155,17 @@ const SignUp = () => {
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-4">
-                <button className="flex items-center justify-center px-4 py-3 border border-white/10 rounded-xl hover:bg-white/5 transition-all duration-200">
+                <button 
+                  className="flex items-center justify-center px-4 py-3 border border-white/10 rounded-xl hover:bg-white/5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isLoading}
+                >
                   <img src="/icons/google.svg" alt="Google" className="w-5 h-5 mr-2" />
                   Google
                 </button>
-                <button className="flex items-center justify-center px-4 py-3 border border-white/10 rounded-xl hover:bg-white/5 transition-all duration-200">
+                <button 
+                  className="flex items-center justify-center px-4 py-3 border border-white/10 rounded-xl hover:bg-white/5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isLoading}
+                >
                   <img src="/icons/github.svg" alt="GitHub" className="w-5 h-5 mr-2" />
                   GitHub
                 </button>
@@ -116,9 +175,9 @@ const SignUp = () => {
             {/* Login Link */}
             <p className="mt-8 text-center text-sm text-white/60">
               Already have an account?{' '}
-              <a href="/login" className="text-violet-400 hover:text-violet-300 font-medium">
+              <Link to="/login" className="text-violet-400 hover:text-violet-300 font-medium">
                 Sign in
-              </a>
+              </Link>
             </p>
           </motion.div>
         </div>

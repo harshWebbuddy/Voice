@@ -1,36 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import authService from '../services/authService';
+import { toast } from 'react-hot-toast';
 
 const ResetPassword = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [token, setToken] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle password reset logic here
-    setIsSubmitted(true);
-    // Redirect to login after 2 seconds
-    setTimeout(() => {
+  useEffect(() => {
+    // Get token from URL query parameters
+    const searchParams = new URLSearchParams(location.search);
+    const tokenFromUrl = searchParams.get('token');
+    if (tokenFromUrl) {
+      setToken(tokenFromUrl);
+    } else {
+      toast.error('Invalid reset link');
       navigate('/login');
-    }, 2000);
-  };
+    }
+  }, [location, navigate]);
 
-  const validatePassword = () => {
-    if (!password) return 0;
-    const checks = [
-      password.length >= 8,
-      /[A-Z]/.test(password),
-      /[a-z]/.test(password),
-      /[0-9]/.test(password),
-      /[^A-Za-z0-9]/.test(password)
-    ];
-    return checks.filter(Boolean).length;
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
 
-  const passwordStrength = validatePassword();
+    if (password.length < 8) {
+      toast.error('Password must be at least 8 characters long');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await authService.resetPassword(token, password);
+      toast.success('Password reset successful');
+      navigate('/login');
+    } catch (error: any) {
+      console.error('Reset password error:', error);
+      toast.error(error.response?.data?.message || 'Failed to reset password. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden flex items-center justify-center">
@@ -64,93 +83,62 @@ const ResetPassword = () => {
             transition={{ delay: 0.1 }}
             className="bg-white/5 backdrop-blur-lg rounded-3xl p-8 shadow-2xl shadow-black/10"
           >
-            {!isSubmitted ? (
-              <>
-                <h2 className="text-2xl font-bold mb-2 text-center">Set New Password</h2>
-                <p className="text-white/60 text-center mb-8">
-                  Create a strong password for your account
-                </p>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-white/80 mb-2">
-                      New Password
-                    </label>
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-                      placeholder="Enter new password"
-                      required
-                    />
-                    {password && (
-                      <div className="mt-2">
-                        <div className="flex gap-1 mb-1">
-                          {[1, 2, 3, 4, 5].map((strength) => (
-                            <div
-                              key={strength}
-                              className={`h-1 flex-1 rounded-full transition-all ${
-                                strength <= passwordStrength
-                                  ? strength <= 2
-                                    ? 'bg-red-500'
-                                    : strength <= 4
-                                    ? 'bg-yellow-500'
-                                    : 'bg-green-500'
-                                  : 'bg-white/10'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <p className="text-xs text-white/40">
-                          Password must be at least 8 characters with uppercase, lowercase, number, and special character
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-white/80 mb-2">
-                      Confirm Password
-                    </label>
-                    <input
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-                      placeholder="Confirm new password"
-                      required
-                    />
-                    {confirmPassword && password !== confirmPassword && (
-                      <p className="mt-1 text-xs text-red-400">
-                        Passwords do not match
-                      </p>
-                    )}
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={!password || password !== confirmPassword || passwordStrength < 4}
-                    className="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3 rounded-xl font-medium hover:from-violet-700 hover:to-cyan-700 transition-all duration-200 shadow-lg shadow-violet-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Reset Password
-                  </button>
-                </form>
-              </>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center"
+            <h2 className="text-2xl font-bold mb-2 text-center">Reset Your Password</h2>
+            <p className="text-white/60 text-center mb-8">
+              Enter your new password below.
+            </p>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-white/80 mb-2">
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                  placeholder="Enter new password"
+                  required
+                  disabled={isLoading}
+                  minLength={8}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/80 mb-2">
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
+                  placeholder="Confirm new password"
+                  required
+                  disabled={isLoading}
+                  minLength={8}
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3 rounded-xl font-medium hover:from-violet-700 hover:to-cyan-700 transition-all duration-200 shadow-lg shadow-violet-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isLoading}
               >
-                <div className="w-16 h-16 bg-gradient-to-r from-violet-600 to-cyan-600 rounded-full mx-auto mb-6 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold mb-2">Password Reset Successfully</h3>
-                <p className="text-white/60 mb-6">
-                  Your password has been reset successfully. Redirecting to login...
-                </p>
-              </motion.div>
-            )}
+                {isLoading ? 'Resetting Password...' : 'Reset Password'}
+              </button>
+            </form>
+
+            {/* Back to Login */}
+            <div className="mt-8 text-center">
+              <Link
+                to="/login"
+                className="text-sm text-violet-400 hover:text-violet-300 font-medium flex items-center justify-center"
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to login
+              </Link>
+            </div>
           </motion.div>
         </div>
       </div>

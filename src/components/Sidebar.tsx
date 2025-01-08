@@ -28,7 +28,8 @@ const menuItems: MenuItem[] = [
     children: [
       { label: 'Assistants', icon: RiTeamLine, path: '/assistants' },
       { label: 'Phone Numbers', icon: RiPhoneLine, path: '/phone-numbers' },
-      { label: 'Files', icon: RiFileList2Line, path: '/files' }
+      { label: 'Files', icon: RiFileList2Line, path: '/files' },
+      { label: 'Call Logs', icon: RiPhoneLine, path: '/call-logs' }
     ]
   },
   { label: 'Voice Library', icon: RiVoiceprintLine, path: '/voice-library' }
