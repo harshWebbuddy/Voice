@@ -16,7 +16,7 @@ const Login = () => {
     setIsLoading(true);
     
     try {
-      await authService.login({ email, password });
+      await authService.login(email, password);
       toast.success('Login successful!');
       navigate('/dashboard');
     } catch (error: any) {

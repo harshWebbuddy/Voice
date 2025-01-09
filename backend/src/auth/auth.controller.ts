@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UnauthorizedException, Get, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException, Get, BadRequestException, Delete, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -121,5 +121,20 @@ export class AuthController {
       resetPasswordData.token,
       resetPasswordData.newPassword,
     );
+  }
+
+  @Get('users')
+  async getAllUsers() {
+    return this.authService.getAllUsers();
+  }
+
+  @Delete('users/:id')
+  async deleteUser(@Param('id') id: string) {
+    return this.authService.deleteUser(id);
+  }
+
+  @Delete('users')
+  async deleteAllUsers() {
+    return this.authService.deleteAllUsers();
   }
 } 

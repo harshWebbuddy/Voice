@@ -31,6 +31,7 @@ export class EmailService {
   async sendPasswordResetEmail(email: string, resetToken: string) {
     try {
       this.logger.log(`Sending password reset email to ${email}`);
+      const resetUrl = `http://localhost:8080/reset-password?token=${resetToken}`;
       await this.mailerService.sendMail({
         to: email,
         subject: 'Reset Your Password - VoiceAI',
@@ -39,7 +40,7 @@ export class EmailService {
             <h1 style="color: #7c3aed; text-align: center;">Password Reset Request</h1>
             <p>You requested to reset your password. Click the button below to proceed:</p>
             <div style="text-align: center; margin: 30px 0;">
-              <a href="http://localhost:8080/reset-password?token=${resetToken}" 
+              <a href="${resetUrl}" 
                 style="background: linear-gradient(to right, #7c3aed, #06b6d4);
                        color: white;
                        padding: 12px 24px;
@@ -52,7 +53,7 @@ export class EmailService {
             </div>
             <p>If the button doesn't work, copy and paste this link into your browser:</p>
             <p style="word-break: break-all; color: #7c3aed;">
-              http://localhost:8080/reset-password?token=${resetToken}
+              ${resetUrl}
             </p>
             <p style="color: #666; margin-top: 30px;">
               If you didn't request this, please ignore this email.<br>

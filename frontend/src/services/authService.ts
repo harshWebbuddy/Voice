@@ -28,17 +28,12 @@ export const register = async (
   lastName: string
 ): Promise<User> => {
   try {
-    console.log('Sending registration request:', { email, firstName, lastName });
+    console.log('Sending registration request with data:', { email, firstName, lastName });
     const response = await axios.post<User>(`${API_URL}/register`, {
       email,
       password,
       firstName,
-      lastName,
-    }, {
-      withCredentials: true,
-      headers: {
-        'Content-Type': 'application/json',
-      }
+      lastName
     });
     console.log('Registration response:', response.data);
     return response.data;

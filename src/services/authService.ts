@@ -3,7 +3,7 @@ import axios from 'axios';
 const API_URL = 'http://localhost:3000/auth';
 
 interface AuthResponse {
-  token: string;
+  access_token: string;
   user: {
     id: string;
     email: string;
@@ -19,19 +19,24 @@ interface ResetPasswordResponse {
 const authService = {
   login: async (email: string, password: string): Promise<AuthResponse> => {
     const { data } = await axios.post<AuthResponse>(`${API_URL}/login`, { email, password });
-    if (data.token) {
-      localStorage.setItem('token', data.token);
+    if (data.access_token) {
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('user', JSON.stringify(data.user));
     }
     return data;
   },
 
-  register: async (firstName: string, lastName: string, email: string, password: string): Promise<AuthResponse> => {
-    const { data } = await axios.post<AuthResponse>(`${API_URL}/register`, {
-      firstName,
-      lastName,
-      email,
-      password,
-    });
+  register: async (userData: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+  }): Promise<AuthResponse> => {
+    const { data } = await axios.post<AuthResponse>(`${API_URL}/register`, userData);
+    if (data.access_token) {
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+    }
     return data;
   },
 
@@ -43,7 +48,7 @@ const authService = {
   resetPassword: async (token: string, password: string): Promise<ResetPasswordResponse> => {
     const { data } = await axios.post<ResetPasswordResponse>(`${API_URL}/reset-password`, {
       token,
-      password
+      newPassword: password
     });
     return data;
   },

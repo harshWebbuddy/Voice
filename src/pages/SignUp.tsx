@@ -27,7 +27,12 @@ const SignUp = () => {
     setIsLoading(true);
 
     try {
-      await authService.register(formData);
+      const response = await authService.register({
+        email: formData.email,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName
+      });
       toast.success('Registration successful!');
       navigate('/dashboard');
     } catch (error: any) {

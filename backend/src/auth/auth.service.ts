@@ -16,6 +16,13 @@ export class AuthService {
     private emailService: EmailService,
   ) {}
 
+  async getAllUsers() {
+    const users = await this.usersRepository.find({
+      select: ['id', 'email', 'firstName', 'lastName', 'createdAt', 'isActive']
+    });
+    return users;
+  }
+
   async findUserByEmail(email: string): Promise<User | null> {
     console.log('Finding user by email:', email);
     const normalizedEmail = email.toLowerCase().trim();
@@ -207,5 +214,20 @@ export class AuthService {
     await this.emailService.sendPasswordChangedEmail(matchedUser.email);
 
     return { message: 'Password reset successful' };
+  }
+
+  async deleteUser(id: string) {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    await this.usersRepository.remove(user);
+    return { message: `User ${user.email} deleted successfully` };
+  }
+
+  async deleteAllUsers() {
+    const users = await this.usersRepository.find();
+    await this.usersRepository.remove(users);
+    return { message: `${users.length} users deleted successfully` };
   }
 } 
