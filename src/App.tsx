@@ -19,15 +19,13 @@ const App = () => {
       <Toaster position="top-right" />
       <BrowserRouter>
         <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Home />} />
+           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
-          {/* Protected routes */}
-          <Route element={<ProtectedLayout />}>
+           {/* <Route element={<ProtectedLayout />}> */}
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/assistants" element={<AssistantPage />} />
             <Route path="/assistants/:id" element={<AssistantPage />} />
@@ -35,7 +33,7 @@ const App = () => {
             <Route path="/files" element={<Files />} />
             <Route path="/voice-library" element={<VoiceLibrary />} />
             <Route path="/call-logs" element={<CallLogs />} />
-          </Route>
+          {/* </Route> */}
         </Routes>
       </BrowserRouter>
     </>
