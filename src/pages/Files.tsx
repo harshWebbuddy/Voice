@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { RiUpload2Line, RiFileTextLine, RiCloseLine } from "react-icons/ri";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
-import { token } from "../../backend/src/token";
+import { token } from "../lib/token";
 
 const Files = () => {
   const [isDragging, setIsDragging] = useState(false);
@@ -165,9 +165,11 @@ const Files = () => {
                   >
                     <RiFileTextLine className="w-5 h-5 text-teal-500" />
                     <div>
-                        <p className="font-medium text-gray-900">
-                        {file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name}
-                        </p>
+                      <p className="font-medium text-gray-900">
+                        {file.name.length > 20
+                          ? file.name.substring(0, 20) + "..."
+                          : file.name}
+                      </p>
                       <p className="text-sm text-gray-500">
                         {new Date(file.createdAt).toLocaleString()}
                       </p>
@@ -202,116 +204,116 @@ const Files = () => {
               ))}
             </div>
           )}
-            {selectedFile && (
+          {selectedFile && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <div className="bg-white rounded-xl shadow-lg p-6 max-w-lg w-full">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">
-                File Details
-                </h3>
-                <button
-                onClick={() => setSelectedFile(null)}
-                className="text-gray-500 hover:text-gray-900 transition-colors"
-                >
-                <RiCloseLine className="w-6 h-6" />
-                </button>
-              </div>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
-                  </label>
-                  <input
-                  type="text"
-                  value={selectedFile.name}
-                  onChange={(e) => {
-                    const newName = e.target.value.endsWith('.pdf') 
-                    ? e.target.value 
-                    : `${e.target.value}.pdf`;
-                    setSelectedFile({
-                    ...selectedFile,
-                    name: newName,
-                    });
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                  />
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    File Details
+                  </h3>
+                  <button
+                    onClick={() => setSelectedFile(null)}
+                    className="text-gray-500 hover:text-gray-900 transition-colors"
+                  >
+                    <RiCloseLine className="w-6 h-6" />
+                  </button>
                 </div>
-                </div>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        value={selectedFile.name}
+                        onChange={(e) => {
+                          const newName = e.target.value.endsWith(".pdf")
+                            ? e.target.value
+                            : `${e.target.value}.pdf`;
+                          setSelectedFile({
+                            ...selectedFile,
+                            name: newName,
+                          });
+                        }}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                      />
+                    </div>
+                  </div>
 
-                <div className="space-y-2 text-sm text-gray-600">
-                <p>
-                  <strong>ID:</strong> {selectedFile.id}
-                </p>
-                <p>
-                  <strong>Name:</strong> {selectedFile.name}
-                </p>
-                <p>
-                  <strong>Size:</strong> {selectedFile.bytes} bytes
-                </p>
-                <p>
-                  <strong>MIME Type:</strong> {selectedFile.mimetype}
-                </p>
-                <p>
-                  <strong>Status:</strong> {selectedFile.status}
-                </p>
-                <p>
-                  <strong>Created:</strong>{" "}
-                  {new Date(selectedFile.createdAt).toLocaleString()}
-                </p>
-                <p>
-                  <strong>Updated:</strong>{" "}
-                  {new Date(selectedFile.updatedAt).toLocaleString()}
-                </p>
-                </div>
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <p>
+                      <strong>ID:</strong> {selectedFile.id}
+                    </p>
+                    <p>
+                      <strong>Name:</strong> {selectedFile.name}
+                    </p>
+                    <p>
+                      <strong>Size:</strong> {selectedFile.bytes} bytes
+                    </p>
+                    <p>
+                      <strong>MIME Type:</strong> {selectedFile.mimetype}
+                    </p>
+                    <p>
+                      <strong>Status:</strong> {selectedFile.status}
+                    </p>
+                    <p>
+                      <strong>Created:</strong>{" "}
+                      {new Date(selectedFile.createdAt).toLocaleString()}
+                    </p>
+                    <p>
+                      <strong>Updated:</strong>{" "}
+                      {new Date(selectedFile.updatedAt).toLocaleString()}
+                    </p>
+                  </div>
 
-                <div className="flex justify-between items-center pt-4 gap-4">
-                <a
-                  href={selectedFile.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-                >
-                  Download File
-                </a>
-                <button
-                  onClick={async () => {
-                  try {
-                    const nameWithPdf = selectedFile.name.endsWith('.pdf')
-                    ? selectedFile.name
-                    : `${selectedFile.name}.pdf`;
-                    const response = await axios.patch(
-                    `https://api.vapi.ai/file/${selectedFile.id}`,
-                    {
-                      name: nameWithPdf,
-                    },
-                    {
-                      headers: {
-                      Authorization: `Bearer ${token}`,
-                      "Content-Type": "application/json",
-                      },
-                    }
-                    );
-                    setSelectedFile(response.data);
-                    setUploadedFiles((files) =>
-                    files.map((f) =>
-                      f.id === selectedFile.id ? response.data : f
-                    )
-                    );
-                  } catch (err) {
-                    setError("Failed to update file details");
-                  }
-                  }}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                >
-                  Save Changes
-                </button>
-                {error && <p className="text-sm text-red-500">{error}</p>}
+                  <div className="flex justify-between items-center pt-4 gap-4">
+                    <a
+                      href={selectedFile.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                    >
+                      Download File
+                    </a>
+                    <button
+                      onClick={async () => {
+                        try {
+                          const nameWithPdf = selectedFile.name.endsWith(".pdf")
+                            ? selectedFile.name
+                            : `${selectedFile.name}.pdf`;
+                          const response = await axios.patch(
+                            `https://api.vapi.ai/file/${selectedFile.id}`,
+                            {
+                              name: nameWithPdf,
+                            },
+                            {
+                              headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "application/json",
+                              },
+                            }
+                          );
+                          setSelectedFile(response.data);
+                          setUploadedFiles((files) =>
+                            files.map((f) =>
+                              f.id === selectedFile.id ? response.data : f
+                            )
+                          );
+                        } catch (err) {
+                          setError("Failed to update file details");
+                        }
+                      }}
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    >
+                      Save Changes
+                    </button>
+                    {error && <p className="text-sm text-red-500">{error}</p>}
+                  </div>
                 </div>
-              </div>
               </div>
             </div>
-            )}
+          )}
         </div>
       </div>
     </div>
