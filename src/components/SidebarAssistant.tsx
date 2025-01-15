@@ -6,6 +6,7 @@ import {
 } from "react-icons/ri";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+ import "../styles/scrollbar.css";
 const SidebarAssistant = ({
   showCreateAssistant,
   setShowCreateAssistant,
@@ -50,46 +51,46 @@ const SidebarAssistant = ({
 export default SidebarAssistant;
 
 const AssistantList = ({ assistants, onAssistantClick }) => {
-    const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        setIsLoading(true);
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, 500); // Simulate loading time
-        return () => clearTimeout(timer);
-    }, [assistants]);
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500); // Simulate loading time
+    return () => clearTimeout(timer);
+  }, [assistants]);
 
-    return (
-        <div className="px-4">
-            {isLoading ? (
-                <div className="text-center py-4 text-gray-500">
-                    Fetching assistants...
-                    <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: "100%" }}
-                        transition={{ duration: 0.5 }}
-                        className="h-1 bg-teal-500 mt-2"
-                    />
-                </div>
-            ) : Array.isArray(assistants) && assistants?.length > 0 ? (
-                assistants.map((assistant) => (
-                    <AssistantCard
-                        key={assistant.id}
-                        assistant={assistant}
-                        onClick={() => onAssistantClick(assistant.id)}
-                    />
-                ))
-            ) : (
-                <div className="text-center grid place-items-center py-4 text-gray-500">
-                    No assistant found
-                </div>
-            )}
+  return (
+    <div className="px-4 h-screen overflow-y-auto scrollbar-custom">
+      {isLoading ? (
+        <div className="text-center py-4 text-gray-500">
+          Fetching assistants...
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 0.5 }}
+            className="h-1 bg-teal-500 mt-2"
+          />
         </div>
-    );
+      ) : Array.isArray(assistants) && assistants?.length > 0 ? (
+        assistants.map((assistant) => (
+          <AssistantCard
+            key={assistant.id}
+            assistant={assistant}
+            onClick={() => onAssistantClick(assistant.id)}
+          />
+        ))
+      ) : (
+        <div className="text-center grid place-items-center py-4 text-gray-500">
+          No assistant found
+        </div>
+      )}
+    </div>
+  );
 };
 
- const AssistantCard = ({ assistant, onClick }) => {
+const AssistantCard = ({ assistant, onClick }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}

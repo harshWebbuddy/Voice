@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { IconType } from 'react-icons';
-import { 
-  RiDashboardLine, 
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { IconType } from "react-icons";
+import {
+  RiDashboardLine,
   RiTeamLine,
   RiPhoneLine,
   RiFileList2Line,
   RiVoiceprintLine,
   RiApps2Line,
   RiArrowDownSLine,
-  RiArrowLeftSLine
-} from 'react-icons/ri';
+  RiArrowLeftSLine,
+} from "react-icons/ri";
 
 interface MenuItem {
   label: string;
@@ -21,28 +21,28 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { label: 'Overview', icon: RiDashboardLine, path: '/dashboard' },
+  { label: "Overview", icon: RiDashboardLine, path: "/dashboard" },
   {
-    label: 'Platform',
+    label: "Platform",
     icon: RiApps2Line,
     children: [
-      { label: 'Assistants', icon: RiTeamLine, path: '/assistants' },
-      { label: 'Phone Numbers', icon: RiPhoneLine, path: '/phone-numbers' },
-      { label: 'Files', icon: RiFileList2Line, path: '/files' },
-      { label: 'Call Logs', icon: RiPhoneLine, path: '/call-logs' }
-    ]
+      { label: "Assistants", icon: RiTeamLine, path: "/assistants" },
+      { label: "Phone Numbers", icon: RiPhoneLine, path: "/phone-numbers" },
+      { label: "Files", icon: RiFileList2Line, path: "/files" },
+      { label: "Call Logs", icon: RiPhoneLine, path: "/call-logs" },
+    ],
   },
-  { label: 'Voice Library', icon: RiVoiceprintLine, path: '/voice-library' }
+  { label: "Voice Library", icon: RiVoiceprintLine, path: "/voice-library" },
 ];
 
 const Sidebar = () => {
-  const [expandedItems, setExpandedItems] = useState<string[]>(['Platform']);
+  const [expandedItems, setExpandedItems] = useState<string[]>(["Platform"]);
   const location = useLocation();
 
   const toggleExpand = (label: string) => {
-    setExpandedItems(prev => 
-      prev.includes(label) 
-        ? prev.filter(item => item !== label)
+    setExpandedItems((prev) =>
+      prev.includes(label)
+        ? prev.filter((item) => item !== label)
         : [...prev, label]
     );
   };
@@ -54,17 +54,21 @@ const Sidebar = () => {
 
   const renderMenuItem = (item: MenuItem, level: number = 0) => {
     const isExpanded = expandedItems.includes(item.label);
-    const isActive = isPathActive(item.path || '');
+    const isActive = isPathActive(item.path || "");
     const hasChildren = item.children && item.children.length > 0;
 
     return (
       <div key={item.label} className="w-full">
         <Link
-          to={item.path || '#'}
+          to={item.path || "#"}
           className={`
             flex items-center px-4 py-2.5 my-0.5 rounded-lg cursor-pointer
-            ${isActive ? 'bg-violet-50 text-violet-600' : 'text-gray-700 hover:bg-gray-100'}
-            ${level > 0 ? 'ml-4' : ''}
+            ${
+              isActive
+                ? "bg-violet-50 text-violet-600"
+                : "text-gray-700 hover:bg-gray-100"
+            }
+            ${level > 0 ? "ml-4" : ""}
             transition-all duration-200
           `}
           onClick={(e) => {
@@ -74,7 +78,9 @@ const Sidebar = () => {
             }
           }}
         >
-          <item.icon className={`w-5 h-5 mr-3 ${isActive ? 'text-violet-600' : ''}`} />
+          <item.icon
+            className={`w-5 h-5 mr-3 ${isActive ? "text-violet-600" : ""}`}
+          />
           <span className="flex-1 text-sm font-medium">{item.label}</span>
           {item.badge && (
             <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-violet-100 text-violet-600 rounded-full">
@@ -83,13 +89,15 @@ const Sidebar = () => {
           )}
           {hasChildren && (
             <RiArrowDownSLine
-              className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+              className={`w-5 h-5 transition-transform duration-200 ${
+                isExpanded ? "rotate-180" : ""
+              }`}
             />
           )}
         </Link>
         {hasChildren && isExpanded && (
           <div className="mt-1">
-            {item.children?.map(child => renderMenuItem(child, level + 1))}
+            {item.children?.map((child) => renderMenuItem(child, level + 1))}
           </div>
         )}
       </div>
@@ -113,7 +121,9 @@ const Sidebar = () => {
             <span className="text-sm font-medium text-white">S</span>
           </div>
           <div className="flex-1">
-            <div className="text-sm font-medium text-gray-900">sanskar@web...</div>
+            <div className="text-sm font-medium text-gray-900">
+              sanskar@web...
+            </div>
             <div className="text-xs text-gray-500">Free Plan</div>
           </div>
         </div>
@@ -122,11 +132,11 @@ const Sidebar = () => {
       {/* Menu Items */}
       <div className="flex-1 overflow-y-auto py-2">
         <div className="space-y-1">
-          {menuItems.map(item => renderMenuItem(item))}
+          {menuItems.map((item) => renderMenuItem(item))}
         </div>
       </div>
     </div>
   );
 };
 
-export default Sidebar; 
+export default Sidebar;

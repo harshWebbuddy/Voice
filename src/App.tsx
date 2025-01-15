@@ -12,11 +12,15 @@ import Files from "./pages/Files";
 import VoiceLibrary from "./pages/VoiceLibrary";
 import CallLogs from "./pages/CallLogs";
 import { Toaster } from 'react-hot-toast';
-
+import PhoneSetting from "./pages/PhoneSetting";
+import MainPhone from "./pages/PhoneSetting";
+import Sidebar from "./components/Sidebar";
+ 
 const App = () => {
   return (
     <>
       <Toaster position="top-right" />
+      
       <BrowserRouter>
         <Routes>
            <Route path="/" element={<Home />} />
@@ -26,6 +30,7 @@ const App = () => {
           <Route path="/reset-password" element={<ResetPassword />} />
 
            {/* <Route element={<ProtectedLayout />}> */}
+        
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/assistants" element={<AssistantPage />} />
             <Route path="/assistants/:id" element={<AssistantPage />} />
@@ -33,6 +38,7 @@ const App = () => {
             <Route path="/files" element={<Files />} />
             <Route path="/voice-library" element={<VoiceLibrary />} />
             <Route path="/call-logs" element={<CallLogs />} />
+            <Route path="/phone-settings" element={<MainPhone />} />
           {/* </Route> */}
         </Routes>
       </BrowserRouter>

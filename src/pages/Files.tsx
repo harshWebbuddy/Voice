@@ -2,7 +2,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import { RiUpload2Line, RiFileTextLine, RiCloseLine } from "react-icons/ri";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
-import { token } from "../lib/token";
+import { token } from "../lib/constants";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const Files = () => {
   const [isDragging, setIsDragging] = useState(false);
@@ -79,6 +80,7 @@ const Files = () => {
   });
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
@@ -316,7 +318,7 @@ const Files = () => {
           )}
         </div>
       </div>
-    </div>
+    </div></DashboardLayout>
   );
 };
 

@@ -5,7 +5,6 @@ import {
   RiPhoneLine,
   RiTimeLine,
   RiMoneyDollarCircleLine,
-  RiUserLine,
   RiRobot2Line,
   RiCalendarLine,
   RiDownload2Line,
@@ -21,11 +20,10 @@ import {
   RiPieChartLine,
   RiRefreshLine,
   RiPlayCircleLine,
-  RiEyeLine,
-  RiSettings4Line,
 } from "react-icons/ri";
-import { token } from "@/lib/token";
+import { token } from "@/lib/constants";
 import axios from "axios";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface CallLog {
   id: string;
@@ -222,6 +220,7 @@ const CallLogs = () => {
   ];
   console.log("response", showResponse);
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-[1600px] mx-auto space-y-6">
         {/* Header */}
@@ -468,7 +467,6 @@ const CallLogs = () => {
                 <div className="col-span-1 text-sm font-medium text-gray-500">
                   Duration
                 </div>
-                
               </div>
 
               {/* Table Body */}
@@ -552,11 +550,13 @@ const CallLogs = () => {
                       </div>
                       <div className="col-span-1 flex items-center text-sm text-gray-900">
                         <RiTimeLine className="w-4 h-4 text-gray-400 mr-1" />
-                        {typeof log?.requestDurationSeconds === "string" 
-                          ? `${parseInt(log.requestDurationSeconds.replace(/[^\d]/g, ''))} seconds`
+                        {typeof log?.requestDurationSeconds === "string"
+                          ? `${parseInt(
+                              log.requestDurationSeconds.replace(/[^\d]/g, "")
+                            )} seconds`
                           : log?.requestDurationSeconds}
+                        s
                       </div>
-                    
                     </div>
                   );
                 })}
@@ -595,7 +595,7 @@ const CallLogs = () => {
           </div>
         )}
       </div>
-    </div>
+    </div></DashboardLayout>  
   );
 };
 

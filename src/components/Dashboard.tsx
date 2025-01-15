@@ -10,8 +10,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { BsMicFill, BsGear, BsClock, BsFileText } from "react-icons/bs";
+import Sidebar from "./Sidebar";
+import DashboardLayout from "./DashboardLayout";
 
- const conversationData = [
+const conversationData = [
   { name: "Mon", conversations: 65 },
   { name: "Tue", conversations: 85 },
   { name: "Wed", conversations: 73 },
@@ -23,7 +25,9 @@ import { BsMicFill, BsGear, BsClock, BsFileText } from "react-icons/bs";
 
 const Dashboard = () => {
   return (
+    <DashboardLayout >
     <div className="min-h-screen bg-gray-50 p-6">
+     
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -155,6 +159,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
+    </DashboardLayout>
   );
 };
 
