@@ -878,7 +878,7 @@ const AssistantPage = () => {
                           </div>
                           <textarea
                             className="w-full h-32 bg-white text-gray-900 rounded-lg p-4 border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none hover:border-gray-300 transition-colors"
-                            placeholder={firstMessage}
+                            placeholder="Enter first message"
                             onChange={(e) => setFirstMessage(e.target.value)}
                             value={firstMessage}
                           />
@@ -898,7 +898,7 @@ const AssistantPage = () => {
                           </div>
                           <textarea
                             className="w-full h-32 bg-white text-gray-900 rounded-lg p-4 border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none hover:border-gray-300 transition-colors"
-                            defaultValue={systemMessage}
+                            placeholder="Enter system prompt"
                             onChange={(e) => setSystemMessage(e.target.value)}
                             value={systemMessage}
                           />

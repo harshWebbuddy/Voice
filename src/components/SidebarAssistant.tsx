@@ -59,9 +59,9 @@ const AssistantList = ({ assistants, onAssistantClick }) => {
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 500); // Simulate loading time
+    }, 500);  
     return () => clearTimeout(timer);
-  }, [assistants]);
+  }, [ ]);
 
   return (
     <div className="px-4 h-screen overflow-y-auto box-border  border-right-gradient overscroll-y-auto transition-all ease-in-out duration-500 w-[300px] absolute lg:relative z-[9999999999999999] scrollbar-custom">
