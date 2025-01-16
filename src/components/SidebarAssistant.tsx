@@ -20,11 +20,11 @@ const SidebarAssistant = ({
     assistant?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
   return (
-    <div className="w-[320px] z-10 border-r border-gray-200 flex flex-col bg-gradient-to-b from-gray-50 to-gray-100 shadow-lg">
+    <div className="w-[320px] z-10 border-r border-gray-200 flex flex-col bg-white">
       <div className="p-6">
         <button
           onClick={() => setShowCreateAssistant(true)}
-          className="w-full  bg-teal-500   text-white px-5 py-3 rounded-lg flex items-center justify-center hover:from-teal-600 hover:to-blue-600 transition-all mb-6 font-medium shadow-md hover:shadow-xl"
+          className="w-full bg-teal-500 text-white px-5 py-3 rounded-lg flex items-center justify-center hover:bg-teal-600 transition-all mb-6 font-medium"
         >
           <RiAddLine className="mr-3" />
           <span className="font-semibold">Create Assistant</span>
@@ -37,7 +37,7 @@ const SidebarAssistant = ({
             placeholder="Search assistants..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 shadow-sm"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
           />
         </div>
       </div>
@@ -59,12 +59,12 @@ const AssistantList = ({ assistants, onAssistantClick }) => {
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 500);  
+    }, 500);
     return () => clearTimeout(timer);
-  }, [ ]);
+  }, []);
 
   return (
-    <div className="px-4 h-screen overflow-y-auto box-border  border-right-gradient overscroll-y-auto transition-all ease-in-out duration-500 w-[300px] absolute lg:relative z-[9999999999999999] scrollbar-custom">
+    <div className="px-4 h-screen overflow-y-auto box-border border-r border-gray-200 w-[300px] absolute lg:relative scrollbar-custom">
       {isLoading ? (
         <div className="text-center py-4 text-gray-500">
           Fetching assistants...
@@ -84,9 +84,7 @@ const AssistantList = ({ assistants, onAssistantClick }) => {
           />
         ))
       ) : (
-        <div className="text-center grid place-items-center py-4 text-gray-500">
-          No assistant found
-        </div>
+        <div className="text-center py-4 text-gray-500">No assistant found</div>
       )}
     </div>
   );
@@ -97,27 +95,22 @@ const AssistantCard = ({ assistant, onClick }) => {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.05 }}
-      className="px-6   mb-5   border  rounded-2xl     hover:shadow-2xl transition-all cursor-pointer group transform"
+      whileHover={{ scale: 1.02 }}
+      className="p-4 mb-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all cursor-pointer"
       onClick={onClick}
     >
-      <div className="flex flex-row w-full   items-center">
-        {/* <div className="mr-5 w-8 h-8  bg-white  ounded-full flex justify-center items-center  ">
-          <span className="text-teal-600 text-xl font-semibold">
-            {assistant?.name?.slice(0, 2).toUpperCase() || "AS"}
-          </span>
-        </div> */}
-
-        <div className="flex mx-auto ">
-          <div className="flex items-center justify-between">
-            <span className="text-black font-semibold text-lg">
-              {assistant.name || "Assistant"}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-teal-50 rounded-full flex items-center justify-center">
+            <span className="text-teal-600 text-sm font-medium">
+              {assistant?.name?.slice(0, 2).toUpperCase() || "AS"}
             </span>
-            {assistant.isFavorite && <RiStarFill className="text-yellow-400" />}
           </div>
+          <span className="text-gray-900 font-medium">
+            {assistant.name || "Assistant"}
+          </span>
         </div>
-
-        <RiArrowRightLine className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+        {assistant.isFavorite && <RiStarFill className="text-yellow-400" />}
       </div>
     </motion.div>
   );
