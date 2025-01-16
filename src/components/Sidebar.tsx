@@ -65,7 +65,7 @@ const Sidebar = () => {
             flex items-center px-4 py-2.5 my-0.5 rounded-lg cursor-pointer
             ${
               isActive
-                ? "bg-violet-50 text-violet-600"
+                ? "bg-teal-100 text-teal-600"
                 : "text-gray-700 hover:bg-gray-100"
             }
             ${level > 0 ? "ml-4" : ""}
@@ -79,11 +79,11 @@ const Sidebar = () => {
           }}
         >
           <item.icon
-            className={`w-5 h-5 mr-3 ${isActive ? "text-violet-600" : ""}`}
+            className={`w-5 h-5 mr-3 ${isActive ? "text-teal-600" : ""}`}
           />
           <span className="flex-1 text-sm font-medium">{item.label}</span>
           {item.badge && (
-            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-violet-100 text-violet-600 rounded-full">
+            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-teal-100 text-teal-600 rounded-full">
               {item.badge}
             </span>
           )}
@@ -117,7 +117,7 @@ const Sidebar = () => {
       {/* User Profile */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-violet-600 to-cyan-600 flex items-center justify-center mr-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-600 to-blue-600 flex items-center justify-center mr-3">
             <span className="text-sm font-medium text-white">S</span>
           </div>
           <div className="flex-1">

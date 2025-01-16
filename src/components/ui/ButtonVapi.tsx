@@ -1,21 +1,8 @@
 import ScaleLoader from "react-spinners/ScaleLoader";
 
-const ButtonVapi = ({ label, onClick, isLoading, disabled }) => {
-  const opacity = disabled ? 0.75 : 1;
-  const cursor = disabled ? "not-allowed" : "pointer";
-
+const ButtonVapi = ({ label, onClick, isLoading }) => {
   const Contents = isLoading ? (
-    <ScaleLoader
-      color="#ffffff"  
-      height={10}
-      width={2.5}
-      margin={0.5}
-      loading={true}
-      style={{
-        display: "block",
-        margin: "0 auto",
-      }}
-    />
+    <p style={{ margin: 0, padding: 0 }}>{label}</p>
   ) : (
     <p style={{ margin: 0, padding: 0 }}>{label}</p>
   );
@@ -25,16 +12,14 @@ const ButtonVapi = ({ label, onClick, isLoading, disabled }) => {
       onClick={onClick}
       style={{
         backgroundColor: "#38b2ac",
-        color: "black",
+        color: "white",
         border: " ",
         borderRadius: "8px",
-        padding: "8px 20px",
+        padding: "2px ",
         fontSize: "16px",
         outline: "none",
-        
+
         transition: "all 0.3s ease",
-        opacity,
-        cursor,
       }}
     >
       {Contents}

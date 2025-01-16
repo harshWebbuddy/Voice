@@ -1,31 +1,21 @@
+import ScaleLoader from "react-spinners/ScaleLoader";
 import AssistantSpeechIndicator from "./AssistantSpeechIndicator";
 import ButtonVapi from "./ButtonVapi";
 import VolumeLevel from "./Volumelevel";
+import { motion } from "framer-motion";
 
- 
-
-const ActiveCallDetail = ({ assistantIsSpeaking, volumeLevel, onEndCallClick }) => {
+const ActiveCallDetail = ({
+  assistantIsSpeaking,
+  volumeLevel,
+  onEndCallClick,
+}) => {
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "15px",
-          border: "1px solid #ddd",
-          borderRadius: "8px",
-          boxShadow: "0px 4px 8px rgba(0,0,0,0.1)",
-          width: "300px",
-          height: "200px",
-        }}
-      >
-        <AssistantSpeechIndicator isSpeaking={assistantIsSpeaking} />
-        <VolumeLevel volume={volumeLevel} />
+    <div className="flex w-full h-10 gap-6 flex-row justify-between items-center">
+      <div className="flex items-center">
+        <ScaleLoader color="#ffffff" height={5} width={2.5} loading={true} />
       </div>
-      <div style={{ marginTop: "20px", textAlign: "center" }}>
-        <ButtonVapi label="End Call" onClick={onEndCallClick} isLoading={undefined} disabled={undefined}   />
+      <div className="w-full" style={{ textAlign: "center" }}>
+        <ButtonVapi label="End Call" onClick={onEndCallClick} isLoading={""} />
       </div>
     </div>
   );

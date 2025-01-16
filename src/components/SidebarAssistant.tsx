@@ -6,7 +6,8 @@ import {
 } from "react-icons/ri";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
- import "../styles/scrollbar.css";
+import "../styles/scrollbar.css";
+
 const SidebarAssistant = ({
   showCreateAssistant,
   setShowCreateAssistant,
@@ -19,11 +20,11 @@ const SidebarAssistant = ({
     assistant?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
   return (
-    <div className="w-[320px] border-r border-gray-200 flex flex-col bg-gray-50">
+    <div className="w-[320px] z-10 border-r border-gray-200 flex flex-col bg-gradient-to-b from-gray-50 to-gray-100 shadow-lg">
       <div className="p-6">
         <button
           onClick={() => setShowCreateAssistant(true)}
-          className="w-full bg-teal-500 text-white px-5 py-3 rounded-lg flex items-center justify-center hover:bg-teal-600 transition-all mb-6 font-medium shadow-md hover:shadow-xl"
+          className="w-full bg-gradient-to-r from-teal-500 to-blue-500 text-white px-5 py-3 rounded-lg flex items-center justify-center hover:from-teal-600 hover:to-blue-600 transition-all mb-6 font-medium shadow-md hover:shadow-xl"
         >
           <RiAddLine className="mr-3" />
           <span className="font-semibold">Create Assistant</span>
@@ -36,7 +37,7 @@ const SidebarAssistant = ({
             placeholder="Search assistants..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 shadow-sm"
           />
         </div>
       </div>
@@ -48,6 +49,7 @@ const SidebarAssistant = ({
     </div>
   );
 };
+
 export default SidebarAssistant;
 
 const AssistantList = ({ assistants, onAssistantClick }) => {
@@ -62,7 +64,7 @@ const AssistantList = ({ assistants, onAssistantClick }) => {
   }, [assistants]);
 
   return (
-    <div className="px-4 h-screen overflow-y-auto scrollbar-custom">
+    <div className="px-4 h-screen overflow-y-auto box-border  border-right-gradient overscroll-y-auto transition-all ease-in-out duration-500 w-[300px] absolute lg:relative z-[9999999999999999] scrollbar-custom">
       {isLoading ? (
         <div className="text-center py-4 text-gray-500">
           Fetching assistants...
@@ -95,26 +97,27 @@ const AssistantCard = ({ assistant, onClick }) => {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="px-6 py-5 mb-5 shadow-lg rounded-2xl bg-white hover:shadow-2xl transition-all cursor-pointer group transform hover:scale-105"
+      whileHover={{ scale: 1.05 }}
+      className="px-6 py-5 mb-5 shadow-lg rounded-2xl bg-gradient-to-r from-teal-500 to-blue-500 hover:shadow-2xl transition-all cursor-pointer group transform"
       onClick={onClick}
     >
       <div className="flex items-center">
-        <div className="mr-5 w-14 h-14 bg-gray-200 rounded-full flex justify-center items-center">
-          <span className="text-gray-600 text-xl font-semibold">
-            {assistant?.name?.slice(0, 2).toUpperCase()}
+        <div className="mr-5 w-14 h-14 bg-white rounded-full flex justify-center items-center shadow-md">
+          <span className="text-teal-600 text-xl font-semibold">
+            {assistant?.name?.slice(0, 2).toUpperCase() || "AS"}
           </span>
         </div>
 
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <span className="text-gray-900 font-semibold text-lg">
-              {assistant.name}
+            <span className="text-white font-semibold text-lg">
+              {assistant.name || "Assistant"}
             </span>
-            {assistant.isFavorite && <RiStarFill className="text-amber-400" />}
+            {assistant.isFavorite && <RiStarFill className="text-yellow-400" />}
           </div>
         </div>
 
-        <RiArrowRightLine className="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <RiArrowRightLine className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
     </motion.div>
   );
