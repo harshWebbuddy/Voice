@@ -117,7 +117,7 @@ const Sidebar = () => {
       {/* User Profile */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-600 to-blue-600 flex items-center justify-center mr-3">
+          <div className="w-10 h-10 rounded-full   bg-teal-600   flex items-center justify-center mr-3">
             <span className="text-sm font-medium text-white">S</span>
           </div>
           <div className="flex-1">

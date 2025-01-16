@@ -24,7 +24,7 @@ const SidebarAssistant = ({
       <div className="p-6">
         <button
           onClick={() => setShowCreateAssistant(true)}
-          className="w-full bg-gradient-to-r from-teal-500 to-blue-500 text-white px-5 py-3 rounded-lg flex items-center justify-center hover:from-teal-600 hover:to-blue-600 transition-all mb-6 font-medium shadow-md hover:shadow-xl"
+          className="w-full  bg-teal-500   text-white px-5 py-3 rounded-lg flex items-center justify-center hover:from-teal-600 hover:to-blue-600 transition-all mb-6 font-medium shadow-md hover:shadow-xl"
         >
           <RiAddLine className="mr-3" />
           <span className="font-semibold">Create Assistant</span>
@@ -98,19 +98,19 @@ const AssistantCard = ({ assistant, onClick }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.05 }}
-      className="px-6 py-5 mb-5 shadow-lg rounded-2xl bg-gradient-to-r from-teal-500 to-blue-500 hover:shadow-2xl transition-all cursor-pointer group transform"
+      className="px-6   mb-5   border  rounded-2xl     hover:shadow-2xl transition-all cursor-pointer group transform"
       onClick={onClick}
     >
-      <div className="flex items-center">
-        <div className="mr-5 w-14 h-14 bg-white rounded-full flex justify-center items-center shadow-md">
+      <div className="flex flex-row w-full   items-center">
+        {/* <div className="mr-5 w-8 h-8  bg-white  ounded-full flex justify-center items-center  ">
           <span className="text-teal-600 text-xl font-semibold">
             {assistant?.name?.slice(0, 2).toUpperCase() || "AS"}
           </span>
-        </div>
+        </div> */}
 
-        <div className="flex-1">
+        <div className="flex mx-auto ">
           <div className="flex items-center justify-between">
-            <span className="text-white font-semibold text-lg">
+            <span className="text-black font-semibold text-lg">
               {assistant.name || "Assistant"}
             </span>
             {assistant.isFavorite && <RiStarFill className="text-yellow-400" />}
