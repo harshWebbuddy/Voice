@@ -99,9 +99,87 @@ const CallLogs = () => {
     return duration;
   };
 
+  const getDateRangeFilter = (dateRange: string) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    switch (dateRange) {
+      case "Today": {
+        return today;
+      }
+      case "Yesterday": {
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        return yesterday;
+      }
+      case "Last 7 days": {
+        const last7Days = new Date(today);
+        last7Days.setDate(last7Days.getDate() - 7);
+        return last7Days;
+      }
+      case "Last 30 days": {
+        const last30Days = new Date(today);
+        last30Days.setDate(last30Days.getDate() - 30);
+        return last30Days;
+      }
+      case "This month": {
+        return new Date(today.getFullYear(), today.getMonth(), 1);
+      }
+      case "Last month": {
+        return new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      }
+      default:
+        return null;
+    }
+  };
+
   const filteredLogs = showResponse?.filter((log) => {
     const searchLower = searchQuery.toLowerCase();
     const durationInSeconds = getDurationInSeconds(log?.requestDurationSeconds);
+    const logDate = new Date(log?.requestStartedAt);
+    const dateRangeStart = getDateRangeFilter(dateRange);
+    const now = new Date();
+
+    // Date range filtering
+    if (dateRangeStart) {
+      // For "Today", check if the log date is from today
+      if (dateRange === "Today") {
+        const isToday =
+          logDate.getDate() === now.getDate() &&
+          logDate.getMonth() === now.getMonth() &&
+          logDate.getFullYear() === now.getFullYear();
+        if (!isToday) return false;
+      }
+      // For "Yesterday", check if the log date is from yesterday
+      else if (dateRange === "Yesterday") {
+        const yesterday = new Date(now);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const isYesterday =
+          logDate.getDate() === yesterday.getDate() &&
+          logDate.getMonth() === yesterday.getMonth() &&
+          logDate.getFullYear() === yesterday.getFullYear();
+        if (!isYesterday) return false;
+      }
+      // For "This month", check if the log is from the current month
+      else if (dateRange === "This month") {
+        const isThisMonth =
+          logDate.getMonth() === now.getMonth() &&
+          logDate.getFullYear() === now.getFullYear();
+        if (!isThisMonth) return false;
+      }
+      // For "Last month", check if the log is from the previous month
+      else if (dateRange === "Last month") {
+        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const isLastMonth =
+          logDate.getMonth() === lastMonth.getMonth() &&
+          logDate.getFullYear() === lastMonth.getFullYear();
+        if (!isLastMonth) return false;
+      }
+      // For other ranges (Last 7 days, Last 30 days)
+      else if (logDate < dateRangeStart || logDate > now) {
+        return false;
+      }
+    }
 
     // Call Type filtering
     if (selectedCallType !== "All Types" && log.type !== selectedCallType) {
@@ -181,7 +259,7 @@ const CallLogs = () => {
             </div>
           </div>
 
-           <div className="grid grid-cols-4 gap-6"></div>
+          <div className="grid grid-cols-4 gap-6"></div>
 
           {view === "list" ? (
             <>
@@ -259,7 +337,7 @@ const CallLogs = () => {
                   </button>
                 </div>
 
-                 <AnimatePresence>
+                <AnimatePresence>
                   {showFilters && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
@@ -341,8 +419,7 @@ const CallLogs = () => {
                   </div>
                 </div>
 
-                {/* Table Body */}
-                <div className="divide-y divide-gray-200">
+                 <div className="divide-y divide-gray-200">
                   {filteredLogs?.map((log) => (
                     <div
                       key={log.id}
