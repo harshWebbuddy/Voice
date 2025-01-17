@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   RiPhoneLine,
   RiQuestionLine,
@@ -6,11 +6,37 @@ import {
   RiCloseLine,
 } from "react-icons/ri";
 import axios from "axios";
-import {   token } from "@/lib/constants";
+import { token } from "@/lib/constants";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+interface Country {
+  name: {
+    common: string;
+  };
+  idd: {
+    root: string;
+    suffixes?: string[];
+  };
+  flags: {
+    png: string;
+    svg: string;
+  };
+  cca2: string;
+}
+interface FormData {
+  label: string;
+  authToken: string;
+  accountSID: string;
+  phoneNumber: string;
+}
 
+interface ChangeEvent {
+  target: {
+    name: string;
+    value: string;
+  };
+}
 const PhoneNumbers = () => {
   const [showImportModal, setShowImportModal] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<"Twilio" | "Vonage">(
@@ -22,20 +48,8 @@ const PhoneNumbers = () => {
     accountSID: "",
     phoneNumber: "",
   });
-
-  interface FormData {
-    label: string;
-    authToken: string;
-    accountSID: string;
-    phoneNumber: string;
-  }
-
-  interface ChangeEvent {
-    target: {
-      name: string;
-      value: string;
-    };
-  }
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [fallbackCountryCode, setFallbackCountryCode] = useState("+1");
 
   const handleChange = (e: ChangeEvent) => {
     const { name, value } = e.target;
@@ -86,7 +100,28 @@ const PhoneNumbers = () => {
       }
     }
   };
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await axios.get<Country[]>(
+          "https://restcountries.com/v3.1/all"
+        );
+        const filteredCountries = response.data
+          .filter(
+            (country: Country) => country.idd?.root && country.idd?.suffixes
+          )
+          .sort((a: Country, b: Country) =>
+            a.name.common.localeCompare(b.name.common)
+          );
+        setCountries(filteredCountries);
+      } catch (err) {
+        console.error("Error fetching countries:", err);
+        toast.error("Failed to load country codes");
+      }
+    };
 
+    fetchCountries();
+  }, []);
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
@@ -164,7 +199,7 @@ const PhoneNumbers = () => {
                 >
                   Twilio
                 </button>
-                <button
+                {/* <button
                   onClick={() => setSelectedProvider("Vonage")}
                   className={`flex-1 py-2 rounded-lg transition-colors ${
                     selectedProvider === "Vonage"
@@ -173,7 +208,7 @@ const PhoneNumbers = () => {
                   }`}
                 >
                   Vonage
-                </button>
+                </button> */}
               </div>
 
               {/* Form Fields */}
@@ -183,9 +218,20 @@ const PhoneNumbers = () => {
                     Twilio Phone Number
                   </label>
                   <div className="flex gap-2">
-                    <button className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg flex items-center hover:bg-gray-200 transition-colors">
-                      🇺🇸 <RiCloseLine className="ml-1" />
-                    </button>
+                    <select
+                      className="  w-28  p-3 rounded-l border   border-gray-700"
+                      value={fallbackCountryCode}
+                      onChange={(e) => setFallbackCountryCode(e.target.value)}
+                    >
+                      {countries.map((country) => (
+                        <option
+                          key={country.cca2}
+                          value={country.idd?.root + (country.idd?.suffixes?.[0] || '')}
+                        >
+                          {country.cca2} {country.idd?.root + (country.idd?.suffixes?.[0] || '')}
+                        </option>
+                      ))}
+                    </select>
                     <input
                       type="text"
                       name="phoneNumber"

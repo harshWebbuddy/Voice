@@ -11,6 +11,7 @@ import {
   RiArrowDownSLine,
   RiArrowLeftSLine,
 } from "react-icons/ri";
+import "../styles/scrollbar.css";
 
 interface MenuItem {
   label: string;
@@ -105,7 +106,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-72 h-screen bg-white border-r border-gray-200 flex flex-col">
+    <div className="w-72 border-right-gradient  h-screen bg-white border-r-2 border-gray-200 flex flex-col">
       {/* Header */}
       <div className="p-4 flex items-center border-b border-gray-200">
         <Link to="/" className="flex items-center">

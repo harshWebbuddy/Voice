@@ -20,7 +20,7 @@ const SidebarAssistant = ({
     assistant?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
   return (
-    <div className="w-[320px] z-10 border-r border-gray-200 flex flex-col bg-white">
+    <div className="w-[320px] z-10 border-r border-black flex flex-col bg-gray-50">
       <div className="p-6">
         <button
           onClick={() => setShowCreateAssistant(true)}
@@ -64,7 +64,7 @@ const AssistantList = ({ assistants, onAssistantClick }) => {
   }, []);
 
   return (
-    <div className="px-4 h-screen overflow-y-auto box-border border-r border-gray-200 w-[300px] absolute lg:relative scrollbar-custom">
+    <div className="px-4 h-screen overflow-y-auto box-border w-[300px] absolute lg:relative scrollbar-custom">
       {isLoading ? (
         <div className="text-center py-4 text-gray-500">
           Fetching assistants...
@@ -95,22 +95,45 @@ const AssistantCard = ({ assistant, onClick }) => {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.02 }}
-      className="p-4 mb-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all cursor-pointer"
+      whileHover={{
+        scale: 1.02,
+        backgroundColor: "#f8fafc", // Very light gray on hover
+      }}
+      className="p-4 mb-2 bg-white rounded-lg border border-gray-100 transition-all cursor-pointer flex items-center justify-between group"
       onClick={onClick}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-teal-50 rounded-full flex items-center justify-center">
-            <span className="text-teal-600 text-sm font-medium">
-              {assistant?.name?.slice(0, 2).toUpperCase() || "AS"}
-            </span>
-          </div>
-          <span className="text-gray-900 font-medium">
-            {assistant.name || "Assistant"}
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 bg-teal-50 rounded-lg flex items-center justify-center shadow-sm">
+          <span className="text-teal-600 text-sm font-semibold">
+            {assistant?.name?.slice(0, 2).toUpperCase() || "AS"}
           </span>
         </div>
-        {assistant.isFavorite && <RiStarFill className="text-yellow-400" />}
+        <div className="flex flex-col">
+          <span className="text-gray-800 font-medium text-sm group-hover:text-teal-600 transition-colors">
+            {assistant.name || "Assistant"}
+          </span>
+          <span className="text-gray-400 text-xs">
+            {assistant.type || "AI Assistant"}
+          </span>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        {assistant.isFavorite && (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="text-yellow-400"
+          >
+            <RiStarFill className="w-4 h-4" />
+          </motion.div>
+        )}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <RiArrowRightLine className="w-4 h-4" />
+        </motion.div>
       </div>
     </motion.div>
   );

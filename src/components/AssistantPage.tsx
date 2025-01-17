@@ -133,6 +133,7 @@ const AssistantPage = () => {
       setConnected(false);
       setAssistantIsSpeaking(false);
       toast.success("Call ended successfully");
+      window.location.reload();
     } catch (error) {
       console.error("Error ending call:", error);
       toast.error("Failed to end the call");
@@ -275,6 +276,7 @@ const AssistantPage = () => {
       },
     };
     try {
+    if (assistantName) {
       const response = await axios.post(
         "https://api.vapi.ai/assistant",
         payload,
@@ -299,6 +301,9 @@ const AssistantPage = () => {
       setSelectedTemplate("");
       setAssistantCreated(true);
       toast.success(`Assistant ${assistantName} created successfully`);
+    } else {
+      toast.error("Please enter the Assistant name");
+    }
     } catch (error) {
       console.error("Error creating assistant:", error);
       toast.error("Failed to create assistant");
@@ -557,7 +562,7 @@ const AssistantPage = () => {
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen scrollbar-custom bg-white text-gray-900 flex">
+    <div className="min-h-screen  bg-white  text-gray-900 flex">
         <AnimatePresence>
           {showCreateAssistant && (
             <>
@@ -576,7 +581,7 @@ const AssistantPage = () => {
                 animate={{ x: 0 }}
                 exit={{ x: "-100%" }}
                 transition={{ type: "tween", duration: 0.3 }}
-                className="fixed left-0 top-0 h-full w-1/3 bg-white z-50 overflow-y-auto"
+                className="fixed left-0 top-0 border-black   border-r-2  h-full w-1/3 bg-white z-50 overflow-y-auto"
               >
                 <div className="p-6 pb-24">
                   <div className="flex items-center space-x-3 mb-6">
@@ -617,8 +622,7 @@ const AssistantPage = () => {
                         />
                       </div>
 
-                      {/* Blank Template */}
-                      <div
+                       <div
                         className={`bg-white rounded-lg border ${
                           selectedTemplate === "blank"
                             ? "border-teal-500"
@@ -645,14 +649,14 @@ const AssistantPage = () => {
                     </div>
                   </div>
 
-                  <div className="fixed bottom-0 left-0 w-1/3 p-6 bg-white border-t border-gray-200">
+                  <div className="fixed bottom-0 left-0 w-1/3 p-6 bg-white border-black   border-r-2  ">
                     <div className="flex justify-between items-center">
                       <button
                         onClick={() => {
                           setAssistantName("");
                           setSelectedTemplate("");
                         }}
-                        className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+                        className="px-4 opacity-0 py-2 text-gray-600 hover:text-gray-900 transition-colors"
                       >
                         Close
                       </button>
@@ -710,7 +714,7 @@ const AssistantPage = () => {
         </div>
 
         <div className="flex-1 flex flex-col bg-gradient-to-b from-gray-50 to-gray-100">
-          <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-white shadow-md">
+          <div className="flex justify-between items-center px-6 py-4 border-b border-black bg-gay-50 shadow-md">
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900">
                 {selectedAssistant?.name || "New Assistant"}
@@ -788,11 +792,11 @@ const AssistantPage = () => {
             </div>
           </div>
 
-          <div className="flex-1 p-6 bg-gray-50 overflow-auto">
+          <div className="flex-1    p-6 bg-gray-50 overflow-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl shadow-md border border-gray-200 p-6 bg-white"
+              className="rounded-xl  border-black shadow-md border   p-6 bg-white"
             >
               <div className="flex flex-row justify-between w-full">
                 <div>
