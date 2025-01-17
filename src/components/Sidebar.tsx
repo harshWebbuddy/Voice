@@ -23,17 +23,17 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { label: "Overview", icon: RiDashboardLine, path: "/dashboard" },
-  {
-    label: "Platform",
-    icon: RiApps2Line,
-    children: [
+  // { label: "Overview", icon: RiDashboardLine, path: "/dashboard" },
+  // {
+  //   label: "Platform",
+  //   icon: RiApps2Line,
+  //   children: [
       { label: "Assistants", icon: RiTeamLine, path: "/assistants" },
       { label: "Phone Numbers", icon: RiPhoneLine, path: "/phone-numbers" },
       { label: "Files", icon: RiFileList2Line, path: "/files" },
       { label: "Call Logs", icon: RiPhoneLine, path: "/call-logs" },
-    ],
-  },
+    // ],
+  // },
   // { label: "Voice Library", icon: RiVoiceprintLine, path: "/voice-library" },
 ];
 
