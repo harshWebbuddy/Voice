@@ -40,6 +40,129 @@ interface CallLog {
   recording?: boolean;
 }
 
+const CallLogsLoader = () => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+      <div className="max-w-[1600px] mx-auto space-y-6">
+        {/* Header Skeleton */}
+        <div className="flex items-center justify-between">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-2"
+          >
+            <div className="h-8 w-32 bg-gray-200 rounded-lg animate-pulse" />
+            <div className="h-4 w-48 bg-gray-100 rounded-lg animate-pulse" />
+          </motion.div>
+
+          <div className="flex items-center space-x-3">
+            {[1, 2, 3].map((i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="h-10 w-28 bg-white rounded-lg animate-pulse"
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Search and Filters Skeleton */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-xl border border-gray-200 p-4"
+        >
+          <div className="flex items-center space-x-4">
+            <div className="flex-1 h-10 bg-gray-50 rounded-lg animate-pulse" />
+            <div className="w-40 h-10 bg-gray-50 rounded-lg animate-pulse" />
+            <div className="w-32 h-10 bg-gray-50 rounded-lg animate-pulse" />
+          </div>
+        </motion.div>
+
+        {/* Table Skeleton */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-xl border border-gray-200 overflow-hidden"
+        >
+          {/* Table Header */}
+          <div className="grid grid-cols-9 gap-4 px-6 py-3 border-b border-gray-200 bg-gray-50">
+            {[...Array(9)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: i * 0.05 }}
+                className="h-4 bg-gray-200 rounded animate-pulse"
+              />
+            ))}
+          </div>
+
+          {/* Table Rows */}
+          {[...Array(5)].map((_, rowIndex) => (
+            <div
+              key={rowIndex}
+              className="grid grid-cols-9 gap-4 px-6 py-4 border-b border-gray-100 relative overflow-hidden"
+            >
+              {[...Array(9)].map((_, colIndex) => (
+                <motion.div
+                  key={colIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: (rowIndex * 9 + colIndex) * 0.01 }}
+                  className="h-6 bg-gray-50 rounded animate-pulse"
+                />
+              ))}
+              {/* Shimmer Effect */}
+              <motion.div
+                animate={{
+                  x: ["-100%", "100%"],
+                  opacity: [0, 0.1, 0],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: rowIndex * 0.2,
+                }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
+              />
+            </div>
+          ))}
+        </motion.div>
+
+        {/* Progress Bar */}
+        <div className="fixed bottom-8 right-8 bg-white p-4 rounded-xl shadow-lg border border-gray-200 w-80">
+          <div className="space-y-2">
+            <motion.div
+              initial={{ width: "0%" }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="h-1 bg-gradient-to-r from-teal-500 to-teal-600 rounded-full"
+            />
+            <div className="flex justify-between items-center">
+              <motion.div
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="text-teal-500 text-sm"
+              >
+                Loading call logs...
+              </motion.div>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className="w-4 h-4 border-2 border-teal-500 border-t-transparent rounded-full"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CallLogs = () => {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -211,6 +334,11 @@ const CallLogs = () => {
       (log?.callId && log.callId.toLowerCase().includes(searchLower))
     );
   });
+
+  // Show loader while loading
+  if (Loading) {
+    return <CallLogsLoader />;
+  }
 
   return (
     <DashboardLayout>
@@ -419,7 +547,7 @@ const CallLogs = () => {
                   </div>
                 </div>
 
-                 <div className="divide-y divide-gray-200">
+                <div className="divide-y divide-gray-200">
                   {filteredLogs?.map((log) => (
                     <div
                       key={log.id}

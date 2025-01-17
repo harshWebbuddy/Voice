@@ -20,7 +20,7 @@ const SidebarAssistant = ({
     assistant?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
   return (
-    <div className="w-[320px] z-10 border-r border-black flex flex-col bg-gray-50">
+    <div className="w-[320px] z-10 border-r border flex flex-col bg-gray-50">
       <div className="p-6">
         <button
           onClick={() => setShowCreateAssistant(true)}

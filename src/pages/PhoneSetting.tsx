@@ -399,7 +399,7 @@ const PhoneSettings: React.FC<{ selectedPhone: PhoneNumber }> = ({
 
   if (loading) {
     return (
-      <div className="flex items-center mx-auto justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="flex items-center mx-auto justify-center min-h-screen bg-gray-50 ">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

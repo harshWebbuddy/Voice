@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { IconType } from "react-icons";
 import {
@@ -12,6 +12,7 @@ import {
   RiArrowLeftSLine,
 } from "react-icons/ri";
 import "../styles/scrollbar.css";
+import { motion } from "framer-motion";
 
 interface MenuItem {
   label: string;
@@ -33,12 +34,25 @@ const menuItems: MenuItem[] = [
       { label: "Call Logs", icon: RiPhoneLine, path: "/call-logs" },
     ],
   },
-  { label: "Voice Library", icon: RiVoiceprintLine, path: "/voice-library" },
+  // { label: "Voice Library", icon: RiVoiceprintLine, path: "/voice-library" },
 ];
 
+
 const Sidebar = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [expandedItems, setExpandedItems] = useState<string[]>(["Platform"]);
   const location = useLocation();
+
+  // Simulate loading (you can replace this with your actual loading logic)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Show loader while loading
+  
 
   const toggleExpand = (label: string) => {
     setExpandedItems((prev) =>
