@@ -295,7 +295,7 @@ const AssistantPage = () => {
       setSelectedAssistant(newAssistant);
 
       setShowCreateAssistant(false);
-      setAssistantName("");
+
       setSelectedTemplate("");
       setAssistantCreated(true);
       toast.success(`Assistant ${assistantName} created successfully`);
@@ -511,7 +511,7 @@ const AssistantPage = () => {
       console.log("responseUrl", response.data.id);
       setProviderid(response.data.id);
       setClientMessages(response.data.id);
-      toast.success("Knowledge base updated successfully");
+      toast.success("Publish complete: Your AI assistant is live");
       // setClientMessages(response.data.clientMessages);
       console.log("Updated Knowledge Base with files:", selectedFileIds);
     } catch (error) {
@@ -642,8 +642,6 @@ const AssistantPage = () => {
                           </div>
                         </div>
                       </div>
-
-                      
                     </div>
                   </div>
 
@@ -936,9 +934,7 @@ const AssistantPage = () => {
                                     <option value="11labs">11labs</option>
                                     <option value="azure">azure</option>
                                     <option value="cartesia">cartesia</option>
-                                    <option value="custom-voice">
-                                      custom-voice
-                                    </option>
+
                                     <option value="deepgram">deepgram</option>
                                     <option value="lmnt">lmnt</option>
                                     <option value="neets">neets</option>
