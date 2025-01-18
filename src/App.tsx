@@ -207,6 +207,7 @@ function App() {
   return (
     <BrowserRouter>
       <ClerkProviderWithRoutes />
+      <Toaster position="top-right" />
     </BrowserRouter>
   );
 }
