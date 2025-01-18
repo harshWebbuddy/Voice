@@ -5,7 +5,7 @@ import {
   RedirectToSignIn,
   useUser,
 } from "@clerk/clerk-react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { motion } from "framer-motion";
 import AssistantPage from "./components/AssistantPage";
 import PhoneNumbers from "./pages/PhoneNumbers";
@@ -143,7 +143,8 @@ function ClerkProviderWithRoutes() {
             <SignIn
               routing="path"
               path="/sign-in"
-              afterSignInUrl="/assistants"
+              redirectUrl="/assistants"
+              signUpUrl="/sign-up"
             />
           }
         />
@@ -153,7 +154,8 @@ function ClerkProviderWithRoutes() {
             <SignUp
               routing="path"
               path="/sign-up"
-              afterSignUpUrl="/assistants"
+              redirectUrl="/assistants"
+              signInUrl="/sign-in"
             />
           }
         />
