@@ -2,6 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const HandleSignIn = () => {
+    window.location.href = "/assistants";
+  
+  };
   return (
     <>
       <nav className="relative z-50 bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 shadow-lg">
@@ -45,14 +49,12 @@ const Navbar = () => {
               </div>
 
               {/* CTA Button */}
-              <div>
-                <Link
-                  to="/assistants"
+              <div 
+                 onClick={HandleSignIn}
                   className="bg-teal-200 hover:bg-teal-300 text-teal-900 px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-lg hover:shadow-xl"
                 >
                   Get started for free
-                </Link>
-              </div>
+               </div>
             </div>
           </div>
         </div>

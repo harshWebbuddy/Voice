@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import {
   ClerkProvider,
   SignIn,
@@ -116,22 +117,33 @@ function RequireAuth({ children }: { children: React.ReactElement }) {
   return children;
 }
 
-const AuthWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-    <div className="w-full max-w-md relative">
-      {/* Background blur effect */}
-      <div className="absolute inset-0 bg-white/90 backdrop-blur-xl rounded-3xl" />
+const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
+  const { isSignedIn } = useUser();
+  const navigate = useNavigate();
 
-      {/* Gradient border */}
-      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-teal-400/20 to-teal-600/20 p-[1px]">
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-gray-50 to-white/80 backdrop-blur-xl" />
+  useEffect(() => {
+    if (isSignedIn) {
+      navigate("/assistants");
+    }
+  }, [isSignedIn, navigate]);
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-md relative">
+        {/* Background blur effect */}
+        <div className="absolute inset-0 bg-white/90 backdrop-blur-xl rounded-3xl" />
+
+        {/* Gradient border */}
+        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-teal-400/20 to-teal-600/20 p-[1px]">
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-gray-50 to-white/80 backdrop-blur-xl" />
+        </div>
+
+        {/* Content */}
+        <div className="relative p-8">{children}</div>
       </div>
-
-      {/* Content */}
-      <div className="relative p-8">{children}</div>
     </div>
-  </div>
-);
+  );
+};
 
 function ClerkProviderWithRoutes() {
   return (
@@ -180,12 +192,7 @@ function ClerkProviderWithRoutes() {
           path="/sign-in/*"
           element={
             <AuthWrapper>
-              <SignIn
-                routing="path"
-                path="/sign-in"
-                afterSignInUrl={`${window.location.origin}/assistants`}
-                signUpUrl="/sign-up"
-              />
+              <SignIn routing="path" path="/sign-in" signUpUrl="/sign-up" />
             </AuthWrapper>
           }
         />
@@ -193,12 +200,7 @@ function ClerkProviderWithRoutes() {
           path="/sign-up/*"
           element={
             <AuthWrapper>
-              <SignUp
-                routing="path"
-                path="/sign-up"
-                afterSignUpUrl={`${window.location.origin}/assistants`}
-                signInUrl="/sign-in"
-              />
+              <SignUp routing="path" path="/sign-up" signInUrl="/sign-in" />
             </AuthWrapper>
           }
         />
