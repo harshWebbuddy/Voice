@@ -24,7 +24,7 @@ const LoadingScreen = () => {
         <div className="absolute inset-0 bg-white/90 backdrop-blur-xl rounded-3xl" />
 
         {/* Gradient border */}
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/40 to-white/10 p-[1px]">
+        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-teal-400 to-teal-600 p-[1px]">
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-gray-50 to-white/80 backdrop-blur-xl" />
         </div>
 
@@ -116,24 +116,61 @@ function RequireAuth({ children }: { children: React.ReactElement }) {
   return children;
 }
 
+const AuthWrapper = ({ children }: { children: React.ReactNode }) => (
+  <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+    <div className="w-full max-w-md relative">
+      {/* Background blur effect */}
+      <div className="absolute inset-0 bg-white/90 backdrop-blur-xl rounded-3xl" />
+
+      {/* Gradient border */}
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-teal-400/20 to-teal-600/20 p-[1px]">
+        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-gray-50 to-white/80 backdrop-blur-xl" />
+      </div>
+
+      {/* Content */}
+      <div className="relative p-8">{children}</div>
+    </div>
+  </div>
+);
+
 function ClerkProviderWithRoutes() {
   return (
     <ClerkProvider
       publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
       appearance={{
+        layout: {
+          socialButtonsPlacement: "bottom",
+          socialButtonsVariant: "iconButton",
+          termsPageUrl: "https://clerk.com/terms",
+          logoPlacement: "inside",
+          shimmer: true,
+        },
         variables: {
           colorPrimary: "rgb(20 184 166)",
+          colorText: "rgb(17 24 39)",
+          colorBackground: "transparent",
+          borderRadius: "1rem",
         },
         elements: {
+          card: "bg-transparent shadow-none",
           formButtonPrimary:
-            "bg-teal-500 hover:bg-teal-600 text-sm font-medium",
-          card: "bg-white dark:bg-gray-800 shadow-xl",
+            "bg-teal-500 hover:bg-teal-600 text-sm font-medium transition-all shadow-md hover:shadow-lg",
           headerTitle: "text-2xl font-bold",
           socialButtonsProviderIcon: "w-5 h-5",
           formFieldInput:
-            "rounded-xl border-gray-200 focus:border-teal-500 focus:ring-teal-500",
+            "rounded-xl border-gray-200 focus:border-teal-500 focus:ring-teal-500 bg-white/80 backdrop-blur-sm",
           formFieldInputShowPasswordButton: "hover:bg-transparent",
+          dividerLine: "bg-gray-200",
+          dividerText: "text-gray-500",
           footer: "hidden",
+          main: "mx-auto",
+          formField: "space-y-1.5",
+          socialButtons: "grid grid-cols-2 gap-2",
+          socialButtonsIconButton: "flex-1",
+          socialButtonsBlockButton: "flex-1",
+          identityPreviewText: "text-sm text-gray-600",
+          identityPreviewEditButton: "text-teal-500 hover:text-teal-600",
+          avatarBox: "w-12 h-12 rounded-full border-2 border-teal-500",
         },
       }}
     >
@@ -142,23 +179,27 @@ function ClerkProviderWithRoutes() {
         <Route
           path="/sign-in/*"
           element={
-            <SignIn
-              routing="path"
-              path="/sign-in"
-              afterSignInUrl="/assistants"
-              signUpUrl="/sign-up"
-            />
+            <AuthWrapper>
+              <SignIn
+                routing="path"
+                path="/sign-in"
+                afterSignInUrl={`${window.location.origin}/assistants`}
+                signUpUrl="/sign-up"
+              />
+            </AuthWrapper>
           }
         />
         <Route
           path="/sign-up/*"
           element={
-            <SignUp
-              routing="path"
-              path="/sign-up"
-              afterSignUpUrl="/assistants"
-              signInUrl="/sign-in"
-            />
+            <AuthWrapper>
+              <SignUp
+                routing="path"
+                path="/sign-up"
+                afterSignUpUrl={`${window.location.origin}/assistants`}
+                signInUrl="/sign-in"
+              />
+            </AuthWrapper>
           }
         />
         <Route
