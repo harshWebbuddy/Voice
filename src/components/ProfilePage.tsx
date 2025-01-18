@@ -36,9 +36,15 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
   };
 
   const colors = {
-    success: "bg-teal-100 text-teal-600",
-    error: "bg-red-100 text-red-600",
-    warning: "bg-amber-100 text-amber-600",
+    success: "bg-gradient-to-br from-teal-400 to-emerald-500 text-white",
+    error: "bg-gradient-to-br from-red-400 to-rose-500 text-white",
+    warning: "bg-gradient-to-br from-amber-400 to-orange-500 text-white",
+  };
+
+  const emojis = {
+    success: "🎉",
+    error: "😅",
+    warning: "👋",
   };
 
   const Icon = icons[type];
@@ -51,30 +57,44 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
             onClick={onClose}
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              transition: {
+                type: "spring",
+                bounce: 0.4,
+                duration: 0.6,
+              },
+            }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed top-96 left-[800px] -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-sm bg-white rounded-2xl shadow-xl p-6"
+            className="fixed top-96 left-[800px] -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-sm bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 border border-white/20"
           >
             <div className="flex items-center space-x-4">
-              <div
-                className={`w-12 h-12 rounded-full ${colors[type]} flex items-center justify-center`}
+              <motion.div
+                initial={{ rotate: -180, scale: 0 }}
+                animate={{ rotate: 0, scale: 1 }}
+                transition={{ type: "spring", bounce: 0.5, duration: 0.6 }}
+                className={`w-12 h-12 rounded-2xl ${colors[type]} flex items-center justify-center shadow-lg`}
               >
-                <Icon className="w-6 h-6" />
-              </div>
+                <span className="text-xl">{emojis[type]}</span>
+              </motion.div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+                <h3 className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                  {title}
+                </h3>
                 <p className="text-sm text-gray-500">{message}</p>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:text-gray-600 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
               >
-                <RiCloseLine className="w-5 h-5" />
+                <RiCloseLine className="w-5 h-5 text-gray-400" />
               </button>
             </div>
           </motion.div>
@@ -111,42 +131,64 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
             onClick={onClose}
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              transition: {
+                type: "spring",
+                bounce: 0.4,
+                duration: 0.6,
+              },
+            }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed top-96 left-[800px] translate-x-40 -translate-y-4 z-50 w-full max-w-md bg-white rounded-2xl shadow-xl p-6"
+            className="fixed top-96 left-[800px] -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-8 border border-white/20"
           >
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 rounded-full bg-red-100 flex-shrink-0 flex items-center justify-center">
-                <RiAlertLine className="w-6 h-6 text-red-600" />
-              </div>
+              <motion.div
+                initial={{ rotate: -180, scale: 0 }}
+                animate={{ rotate: 0, scale: 1 }}
+                transition={{ type: "spring", bounce: 0.5, duration: 0.6 }}
+                className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-400 to-rose-500 flex-shrink-0 flex items-center justify-center shadow-lg"
+              >
+                <span className="text-xl">😢</span>
+              </motion.div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-                <p className="mt-2 text-sm text-gray-500">{message}</p>
+                <h3 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                  {title}
+                </h3>
+                <p className="mt-2 text-sm text-gray-500 leading-relaxed">
+                  {message}
+                </p>
                 <div className="mt-6 flex items-center justify-end space-x-3">
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={onClose}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-800 bg-gray-100/80 hover:bg-gray-200/80 rounded-xl transition-colors backdrop-blur-sm"
                   >
                     {cancelText}
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={onConfirm}
-                    className="px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors shadow-lg shadow-red-500/20"
+                    className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-rose-600 rounded-xl transition-all shadow-lg shadow-red-500/20 hover:shadow-red-500/30 hover:from-red-600 hover:to-rose-700"
                   >
                     {confirmText}
-                  </button>
+                  </motion.button>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:text-gray-600 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
               >
-                <RiCloseLine className="w-5 h-5" />
+                <RiCloseLine className="w-5 h-5 text-gray-400" />
               </button>
             </div>
           </motion.div>

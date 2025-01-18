@@ -3,7 +3,7 @@ import {
   SignIn,
   SignUp,
   RedirectToSignIn,
-  useAuth,
+  useUser,
 } from "@clerk/clerk-react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import AssistantPage from "./components/AssistantPage";
@@ -15,56 +15,69 @@ import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home";
 import ProfilePage from "./components/ProfilePage";
 
-const clerkPubKey = "pk_test_cHJvLWNvd2JpcmQtMTMuY2xlcmsuYWNjb3VudHMuZGV2JA";
+if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
+  throw new Error("Missing Clerk Publishable Key");
+}
+
+function RequireAuth({ children }: { children: React.ReactElement }) {
+  const { isLoaded, isSignedIn } = useUser();
+
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isSignedIn) {
+    return <RedirectToSignIn />;
+  }
+
+  return children;
+}
 
 function ClerkProviderWithRoutes() {
-  const navigate = useNavigate();
-
   return (
     <ClerkProvider
-      publishableKey={clerkPubKey}
+      publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
       appearance={{
-         elements: {
-          formButtonPrimary: "bg-teal-500 hover:bg-teal-600 text-white",
-          card: "bg-white shadow-none p-8",
-          footer: "hidden",
-          formFieldInput:
-            "border border-gray-200 text-gray-900 focus:border-teal-500 focus:ring-teal-500",
-          formFieldLabel: "text-gray-700",
-          dividerLine: "bg-gray-200",
-          dividerText: "text-gray-500",
-          socialButtonsIconButton: "border border-gray-200 hover:bg-gray-50",
+        variables: {
+          colorPrimary: "rgb(20 184 166)",
+        },
+        elements: {
+          formButtonPrimary:
+            "bg-teal-500 hover:bg-teal-600 text-sm font-medium",
+          card: "bg-white dark:bg-gray-800 shadow-xl",
+          headerTitle: "text-2xl font-bold",
           socialButtonsProviderIcon: "w-5 h-5",
-          formFieldInputShowPasswordButton: "text-gray-500",
-          headerTitle: "text-gray-900 font-bold",
-          headerSubtitle: "text-gray-600",
-          formFieldError: "text-red-500",
-          formFieldSuccessText: "text-teal-500",
+          formFieldInput:
+            "rounded-xl border-gray-200 focus:border-teal-500 focus:ring-teal-500",
+          formFieldInputShowPasswordButton: "hover:bg-transparent",
+          footer: "hidden",
         },
       }}
     >
       <Routes>
-      <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route
           path="/sign-in/*"
-          element={<SignIn routing="path" path="/sign-in" />}
-        />
-        <Route
-          path="/sign-up/*"
-          element={<SignUp routing="path" path="/sign-up" />}
-        />
-
-        {/* Protected Routes */}
-        <Route
-          path="/assistants"
           element={
-            <RequireAuth>
-              <AssistantPage />
-            </RequireAuth>
+            <SignIn
+              routing="path"
+              path="/sign-in"
+              afterSignInUrl="/assistants"
+            />
           }
         />
         <Route
-          path="/assistants/:id"
+          path="/sign-up/*"
+          element={
+            <SignUp
+              routing="path"
+              path="/sign-up"
+              afterSignUpUrl="/assistants"
+            />
+          }
+        />
+        <Route
+          path="/assistants"
           element={
             <RequireAuth>
               <AssistantPage />
@@ -76,22 +89,6 @@ function ClerkProviderWithRoutes() {
           element={
             <RequireAuth>
               <PhoneNumbers />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/files"
-          element={
-            <RequireAuth>
-              <Files />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/voice-library"
-          element={
-            <RequireAuth>
-              <VoiceLibrary />
             </RequireAuth>
           }
         />
@@ -111,34 +108,25 @@ function ClerkProviderWithRoutes() {
             </RequireAuth>
           }
         />
+        <Route
+          path="/files"
+          element={
+            <RequireAuth>
+              <Files />
+            </RequireAuth>
+          }
+        />
+        <Route path="*" element={<RedirectToSignIn />} />
       </Routes>
     </ClerkProvider>
   );
 }
 
- function RequireAuth({ children }: { children: React.ReactNode }) {
-  const { isSignedIn, isLoaded } = useAuth();
-
-  if (!isLoaded) {
-    return null;
-  }
-
-  if (!isSignedIn) {
-    return <RedirectToSignIn />;
-  }
-
-  return <>{children}</>;
-}
-
 function App() {
   return (
-    <>
-      <Toaster position="top-right" />
-
-      <BrowserRouter>
-        <ClerkProviderWithRoutes />
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <ClerkProviderWithRoutes />
+    </BrowserRouter>
   );
 }
 
