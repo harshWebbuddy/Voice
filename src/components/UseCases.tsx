@@ -25,6 +25,7 @@ interface UseCase {
 const UseCases = () => {
   const [activeTab, setActiveTab] = useState<"inbound" | "outbound">("inbound");
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  
   const { scrollYProgress } = useScroll();
 
   // Smooth scroll progress for parallax
@@ -50,8 +51,7 @@ const UseCases = () => {
         { text: "Automated support system", value: "24/7 support" },
       ],
       gradient: "from-teal-400 to-teal-500",
-      pattern:
-        "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 10%)",
+      pattern: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 10%)",
     },
     {
       icon: "/icons/enterprise.svg",
@@ -63,8 +63,7 @@ const UseCases = () => {
         { text: "Multilingual capabilities", value: "120+ languages" },
       ],
       gradient: "from-cyan-500 via-blue-500 to-purple-500",
-      pattern:
-        "linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)",
+      pattern: "linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)",
     },
     {
       icon: "/icons/healthcare.svg",
@@ -76,8 +75,7 @@ const UseCases = () => {
         { text: "Medical inquiry handling", value: "HIPAA compliant" },
       ],
       gradient: "from-emerald-500 via-teal-500 to-cyan-500",
-      pattern:
-        "radial-gradient(circle at 100% 100%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+      pattern: "radial-gradient(circle at 100% 100%, rgba(255,255,255,0.1) 0%, transparent 50%)",
     },
   ];
 
@@ -92,8 +90,7 @@ const UseCases = () => {
         { text: "Follow-up automation", value: "Zero drop-offs" },
       ],
       gradient: "from-teal-500 to-teal-600",
-      pattern:
-        "radial-gradient(circle at 0% 0%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+      pattern: "radial-gradient(circle at 0% 0%, rgba(255,255,255,0.1) 0%, transparent 50%)",
     },
     {
       icon: "/icons/research.svg",
@@ -105,8 +102,7 @@ const UseCases = () => {
         { text: "Sentiment analysis", value: "98% accuracy" },
       ],
       gradient: "from-violet-500 via-purple-500 to-fuchsia-500",
-      pattern:
-        "linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)",
+      pattern: "linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)",
     },
     {
       icon: "/icons/success.svg",
@@ -118,40 +114,32 @@ const UseCases = () => {
         { text: "Retention campaigns", value: "+40% retention" },
       ],
       gradient: "from-blue-500 via-indigo-500 to-violet-500",
-      pattern:
-        "radial-gradient(circle at 50% 0%, rgba(255,255,255,0.1) 0%, transparent 30%)",
+      pattern: "radial-gradient(circle at 50% 0%, rgba(255,255,255,0.1) 0%, transparent 30%)",
     },
   ];
 
-  const CardWrapper = ({
-    children,
-    index,
-  }: {
-    children: React.ReactNode;
-    index: number;
-  }) => {
+  const CardWrapper = ({ children, index }: { children: React.ReactNode; index: number }) => {
     const ref = React.useRef(null);
     const isInView = useInView(ref, {
       once: true,
-      margin: "-20% 0px -20% 0px",
+      margin: "-100px",
     });
 
-    const slideVariants = {
+    const variants = {
       hidden: {
         opacity: 0,
-        x: index % 3 === 0 ? -50 : index % 3 === 2 ? 50 : 0,
-        y: index % 3 === 1 ? 50 : 0,
-        scale: 0.9,
+        y: 20,
+        scale: 0.95,
       },
       visible: {
         opacity: 1,
-        x: 0,
         y: 0,
         scale: 1,
         transition: {
+          type: "spring",
           duration: 0.8,
-          ease: [0.16, 1, 0.3, 1],
-          delay: index * 0.1,
+          delay: index * 0.2,
+          bounce: 0.3,
         },
       },
     };
@@ -159,7 +147,7 @@ const UseCases = () => {
     return (
       <motion.div
         ref={ref}
-        variants={slideVariants}
+        variants={variants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
@@ -169,10 +157,10 @@ const UseCases = () => {
   };
 
   return (
-    <div className="py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Animated Background Elements */}
+    <div className="relative min-h-screen w-full py-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gray-50">
+      {/* Background Elements */}
       <motion.div
-        className="absolute inset-0 overflow-hidden"
+        className="absolute inset-0 pointer-events-none overflow-hidden"
         style={{ scale: bgScale }}
       >
         <motion.div
@@ -186,21 +174,21 @@ const UseCases = () => {
       </motion.div>
 
       <div className="max-w-7xl mx-auto relative">
-        {/* Header with enhanced animations */}
-        <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 mb-6"
-          >
+        {/* Header Section */}
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="inline-flex items-center gap-2 mb-6">
             <motion.span
               className="h-px w-8 bg-gradient-to-r from-teal-500 to-transparent"
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5 }}
             />
             <span className="text-sm font-medium bg-gradient-to-r from-teal-600 to-teal-700 text-transparent bg-clip-text">
               Use Cases
@@ -210,47 +198,35 @@ const UseCases = () => {
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5 }}
             />
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
-          >
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             One Platform,{" "}
             <span className="bg-gradient-to-r from-teal-600 to-teal-700 text-transparent bg-clip-text">
               Endless Possibilities
             </span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl text-gray-600 max-w-3xl mx-auto"
-          >
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Discover how our Voice AI adapts to various industries and use cases
-          </motion.p>
-        </div>
+          </p>
+        </motion.div>
 
-        {/* Enhanced Tabs */}
+        {/* Tabs Section */}
         <div className="flex justify-center mb-16">
           <motion.div
-            className="p-1 bg-white/80 rounded-2xl shadow-lg shadow-gray-200/50 backdrop-blur-sm"
+            className="p-1 bg-white rounded-2xl shadow-lg shadow-gray-200/50 backdrop-blur-sm"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.5 }}
           >
-            <motion.div className="flex gap-2">
+            <div className="flex gap-2">
               {["inbound", "outbound"].map((tab) => (
                 <motion.button
                   key={tab}
                   onClick={() => setActiveTab(tab as "inbound" | "outbound")}
-                  className={`px-8 py-4 rounded-xl text-sm font-medium transition-all relative ${
+                  className={`relative px-8 py-4 rounded-xl text-sm font-medium transition-colors ${
                     activeTab === tab
                       ? "text-gray-900"
                       : "text-gray-500 hover:text-gray-700"
@@ -260,55 +236,43 @@ const UseCases = () => {
                 >
                   {activeTab === tab && (
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl -z-10"
                       layoutId="activeTab"
-                      transition={{
-                        type: "spring",
-                        bounce: 0.2,
-                        duration: 0.6,
-                      }}
+                      className="absolute inset-0 bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl"
+                      style={{ zIndex: -1 }}
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
-                  {tab === "inbound"
-                    ? "Inbound Solutions"
-                    : "Outbound Solutions"}
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)} Solutions
                 </motion.button>
               ))}
-            </motion.div>
+            </div>
           </motion.div>
         </div>
 
-        {/* Enhanced Cards Grid */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
+        {/* Cards Grid */}
+        <div className="relative">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
             {(activeTab === "inbound" ? inboundCases : outboundCases).map(
               (useCase, index) => (
-                <CardWrapper key={index} index={index}>
+                <CardWrapper key={useCase.title} index={index}>
                   <motion.div
-                    className="group relative"
-                    onHoverStart={() => setHoveredCard(index)}
-                    onHoverEnd={() => setHoveredCard(null)}
+                    className="group relative h-full"
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    {/* Enhanced Card Background */}
-                    <div className="absolute inset-0 bg-gradient-to-r rounded-2xl p-[2px] transition-all duration-300 group-hover:opacity-100 opacity-0">
-                      <div
-                        className={`absolute inset-0 bg-gradient-to-r ${useCase.gradient} rounded-2xl opacity-20`}
-                        style={{ backgroundImage: useCase.pattern }}
-                      />
-                    </div>
-
-                    {/* Enhanced Card Content */}
-                    <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg shadow-gray-100/50 border border-gray-100 h-full transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-white">
-                      {/* Enhanced Icon */}
-                      <div
-                        className={`w-16 h-16 rounded-xl bg-gradient-to-r ${useCase.gradient} p-0.5 mb-8 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`}
+                    <div className="relative bg-white rounded-2xl p-8 shadow-lg shadow-gray-100/20 h-full border border-gray-100 backdrop-blur-sm">
+                      {/* Icon */}
+                      <motion.div
+                        className={`w-16 h-16 rounded-xl bg-gradient-to-r ${useCase.gradient} p-0.5 mb-8`}
+                        whileHover={{ scale: 1.05, rotate: 5 }}
                       >
                         <div className="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
                           <img
@@ -317,30 +281,29 @@ const UseCases = () => {
                             className="w-8 h-8"
                           />
                         </div>
-                      </div>
+                      </motion.div>
 
-                      {/* Enhanced Content */}
+                      {/* Content */}
                       <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                         {useCase.title}
                       </h3>
-                      <p className="text-gray-600 mb-8">
-                        {useCase.description}
-                      </p>
+                      <p className="text-gray-600 mb-8">{useCase.description}</p>
 
-                      {/* Enhanced Features */}
+                      {/* Features */}
                       <div className="space-y-4">
                         {useCase.features.map((feature, i) => (
-                          <div
+                          <motion.div
                             key={i}
                             className="flex justify-between items-center"
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.1 }}
                           >
-                            <span className="text-gray-600">
-                              {feature.text}
-                            </span>
+                            <span className="text-gray-600">{feature.text}</span>
                             <span className="text-teal-600 font-medium">
                               {feature.value}
                             </span>
-                          </div>
+                          </motion.div>
                         ))}
                       </div>
                     </div>
@@ -351,6 +314,7 @@ const UseCases = () => {
           </motion.div>
         </AnimatePresence>
       </div>
+    </div>
     </div>
   );
 };

@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import VoiceDoodles from "./VoiceDoodles";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
-
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 const Hero = () => {
   const navigate = useNavigate();
   const { isSignedIn } = useAuth();
@@ -21,11 +22,10 @@ const Hero = () => {
 
   return (
     <div className="relative px-4 sm:px-6 lg:px-8 pb-20 pt-10">
-       <VoiceDoodles className="opacity-60" />
+      <VoiceDoodles className="opacity-60" />
 
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
-          
           <motion.div
             className="flex-1 text-center lg:text-left"
             initial={{ opacity: 0, y: 20 }}
@@ -90,16 +90,14 @@ const Hero = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: 0.3 }}
                 >
-                  <pre className="text-sm text-teal-600">
-                    <code>
-                      {`// Initialize Voice AI
+                  <SyntaxHighlighter language="javascript" style={vscDarkPlus}>
+                    {`// Initialize Voice AI
 const voiceAI = new VoiceAI({
   apiKey: 'your_api_key',
   voice: 'natural',
   language: 'en-US'
 });`}
-                    </code>
-                  </pre>
+                  </SyntaxHighlighter>
                 </motion.div>
                 <motion.div
                   className="bg-gray-50 rounded-lg p-4"
@@ -107,15 +105,13 @@ const voiceAI = new VoiceAI({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: 0.4 }}
                 >
-                  <pre className="text-sm text-teal-600">
-                    <code>
-                      {`// Start conversation
+                  <SyntaxHighlighter language="javascript" style={vscDarkPlus}>
+                    {`// Start conversation
 await voiceAI.speak({
   text: 'Hello! How can I help you today?',
   emotion: 'friendly'
 });`}
-                    </code>
-                  </pre>
+                  </SyntaxHighlighter>
                 </motion.div>
               </div>
             </div>

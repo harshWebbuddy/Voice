@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { RiLayoutGridLine, RiPlugLine, RiGlobalLine } from "react-icons/ri";
 
 const ProductSection = () => {
   const features = [
@@ -7,37 +8,43 @@ const ProductSection = () => {
       title: "Ready-made Templates",
       description:
         "Tailor to your needs and start handling calls right away with our industry-specific AI voice templates.",
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"
-            stroke="currentColor"
-            strokeWidth="2"
-          />
-          <path
-            d="M8 10h8M8 14h4"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      ),
+      icon: <RiLayoutGridLine className="w-6 h-6" />,
       gradient: "from-teal-400 to-teal-500",
       preview: (
-        <div className="bg-teal-50/50 rounded-xl p-4 h-[140px]">
+        <div className="bg-gradient-to-br from-teal-50/50 to-teal-100/30 backdrop-blur-sm rounded-xl p-4 h-[140px] border border-teal-100/50">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
+            <motion.div
+              whileHover={{ scale: 1.05, rotate: 5 }}
+              className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-md"
+            >
               <span className="text-lg">👨‍💼</span>
-            </div>
+            </motion.div>
             <div>
-              <div className="font-medium text-teal-900">SDR Agent</div>
+              <div className="font-medium bg-gradient-to-r from-teal-700 to-teal-900 bg-clip-text text-transparent">
+                SDR Agent
+              </div>
               <div className="text-sm text-teal-600">Solar Industry</div>
             </div>
           </div>
           <div className="space-y-2">
-            <div className="h-2 bg-white rounded-full w-full"></div>
-            <div className="h-2 bg-white rounded-full w-2/3"></div>
-            <div className="h-2 bg-white rounded-full w-1/2"></div>
+            <motion.div
+              initial={{ width: "0%" }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="h-2 bg-gradient-to-r from-teal-200 to-white rounded-full"
+            />
+            <motion.div
+              initial={{ width: "0%" }}
+              animate={{ width: "75%" }}
+              transition={{ duration: 1, delay: 0.4 }}
+              className="h-2 bg-gradient-to-r from-teal-200 to-white rounded-full"
+            />
+            <motion.div
+              initial={{ width: "0%" }}
+              animate={{ width: "50%" }}
+              transition={{ duration: 1, delay: 0.6 }}
+              className="h-2 bg-gradient-to-r from-teal-200 to-white rounded-full"
+            />
           </div>
         </div>
       ),
@@ -46,37 +53,32 @@ const ProductSection = () => {
       title: "Native Integrations",
       description:
         "Seamlessly connect with over 200+ platforms including CRM, telephony, calendars, and more.",
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M3 9v6m0 0v4a2 2 0 002 2h4m-6-6h18M21 9v6m0 0v4a2 2 0 01-2 2h-4m6-6H3"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      ),
+      icon: <RiPlugLine className="w-6 h-6" />,
       gradient: "from-blue-500 to-cyan-500",
       preview: (
-        <div className="bg-blue-50/50 rounded-xl p-4 h-[140px]">
+        <div className="bg-gradient-to-br from-blue-50/50 to-blue-100/30 backdrop-blur-sm rounded-xl p-4 h-[140px] border border-blue-100/50">
           <div className="grid grid-cols-3 gap-2 h-full">
             {[
-              { name: "Salesforce", icon: "💼" },
-              { name: "HubSpot", icon: "🎯" },
-              { name: "Zoom", icon: "🎥" },
-              { name: "Slack", icon: "💬" },
-              { name: "Google", icon: "📅" },
-              { name: "Teams", icon: "👥" },
+              { name: "Salesforce", icon: "💼", delay: 0.2 },
+              { name: "HubSpot", icon: "🎯", delay: 0.3 },
+              { name: "Zoom", icon: "🎥", delay: 0.4 },
+              { name: "Slack", icon: "💬", delay: 0.5 },
+              { name: "Google", icon: "📅", delay: 0.6 },
+              { name: "Teams", icon: "👥", delay: 0.7 },
             ].map((app, i) => (
-              <div
+              <motion.div
                 key={i}
-                className="bg-white rounded-lg p-2 flex flex-col items-center justify-center gap-1 shadow-sm"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: app.delay }}
+                whileHover={{ scale: 1.05 }}
+                className="bg-white rounded-xl p-2 flex flex-col items-center justify-center gap-1 shadow-md hover:shadow-lg transition-shadow"
               >
                 <span className="text-base">{app.icon}</span>
-                <span className="text-[10px] font-medium text-gray-700 truncate w-full text-center">
+                <span className="text-[10px] font-medium bg-gradient-to-r from-blue-700 to-blue-900 bg-clip-text text-transparent truncate w-full text-center">
                   {app.name}
                 </span>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -86,37 +88,31 @@ const ProductSection = () => {
       title: "Multilingual Support",
       description:
         "Engage customers globally with AI voice agents supporting 20+ languages and regional accents.",
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 3h7M12 19l-2 2m2-2l2 2"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      ),
+      icon: <RiGlobalLine className="w-6 h-6" />,
       gradient: "from-rose-500 to-orange-500",
       preview: (
-        <div className="bg-rose-50/50 rounded-xl p-4 h-[140px]">
+        <div className="bg-gradient-to-br from-rose-50/50 to-rose-100/30 backdrop-blur-sm rounded-xl p-4 h-[140px] border border-rose-100/50">
           <div className="grid grid-cols-2 gap-2 h-full">
             {[
-              { flag: "🇺🇸", lang: "English", accent: "US, UK, AU" },
-              { flag: "🇪🇸", lang: "Spanish", accent: "ES, MX, AR" },
-              { flag: "🇫🇷", lang: "French", accent: "FR, CA" },
-              { flag: "🇩🇪", lang: "German", accent: "DE, AT" },
+              { flag: "🇺🇸", lang: "English", accent: "US, UK, AU", delay: 0.2 },
+              { flag: "🇪🇸", lang: "Spanish", accent: "ES, MX, AR", delay: 0.3 },
+              { flag: "🇫🇷", lang: "French", accent: "FR, CA", delay: 0.4 },
+              { flag: "🇩🇪", lang: "German", accent: "DE, AT", delay: 0.5 },
             ].map((lang, i) => (
-              <div
+              <motion.div
                 key={i}
-                className="bg-white rounded-lg p-2 flex flex-col items-center justify-center gap-0.5 shadow-sm"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: lang.delay }}
+                whileHover={{ scale: 1.05 }}
+                className="bg-white rounded-xl p-2 flex flex-col items-center justify-center gap-0.5 shadow-md hover:shadow-lg transition-shadow"
               >
                 <span className="text-xl">{lang.flag}</span>
-                <span className="text-xs font-medium text-gray-900">
+                <span className="text-xs font-medium bg-gradient-to-r from-rose-700 to-rose-900 bg-clip-text text-transparent">
                   {lang.lang}
                 </span>
-                <span className="text-[10px] text-gray-500">{lang.accent}</span>
-              </div>
+                <span className="text-[10px] text-rose-500">{lang.accent}</span>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -127,10 +123,37 @@ const ProductSection = () => {
   return (
     <section className="relative py-24 overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-1/2 left-0 w-[800px] h-[800px] bg-gradient-to-br from-teal-100/20 to-teal-200/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-1/2 right-0 w-[800px] h-[800px] bg-gradient-to-br from-teal-200/20 to-teal-300/20 rounded-full blur-3xl"></div>
-      </div>
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 45, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute -top-1/2 left-0 w-[800px] h-[800px] bg-gradient-to-br from-teal-100/20 to-teal-200/20 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1.2, 1, 1.2],
+            rotate: [0, -45, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute -bottom-1/2 right-0 w-[800px] h-[800px] bg-gradient-to-br from-teal-200/20 to-teal-300/20 rounded-full blur-3xl"
+        />
+      </motion.div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Header */}
@@ -178,25 +201,28 @@ const ProductSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group relative h-[280px]"
+              className="group relative h-full"
             >
+              {/* Gradient border effect */}
               <div className="absolute inset-0 bg-gradient-to-r rounded-3xl transition-all duration-300 group-hover:opacity-100 opacity-0 p-[1px]">
                 <div
                   className={`absolute inset-0 bg-gradient-to-r ${feature.gradient} rounded-3xl opacity-10`}
                 />
               </div>
 
-              <div className="relative bg-white rounded-3xl p-6 shadow-lg border border-gray-100 transition-all duration-300 group-hover:-translate-y-1 h-full flex flex-col">
+              {/* Card content */}
+              <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-gray-100/50 transition-all duration-300 group-hover:-translate-y-1 h-full flex flex-col">
                 <div className="flex items-start gap-4 mb-6">
-                  <div
+                  <motion.div
+                    whileHover={{ scale: 1.05, rotate: 5 }}
                     className={`w-12 h-12 rounded-xl bg-gradient-to-r ${feature.gradient} p-0.5 shrink-0`}
                   >
                     <div className="w-full h-full bg-white rounded-[10px] flex items-center justify-center text-gray-900">
                       {feature.icon}
                     </div>
-                  </div>
+                  </motion.div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-2">
                       {feature.title}
                     </h3>
                     <p className="text-gray-600 text-sm">
