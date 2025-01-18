@@ -5,7 +5,7 @@ import {
   RedirectToSignIn,
   useUser,
 } from "@clerk/clerk-react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import AssistantPage from "./components/AssistantPage";
 import PhoneNumbers from "./pages/PhoneNumbers";
@@ -102,13 +102,15 @@ if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
 
 function RequireAuth({ children }: { children: React.ReactElement }) {
   const { isLoaded, isSignedIn } = useUser();
+  const navigate = useNavigate();
 
   if (!isLoaded) {
     return <LoadingScreen />;
   }
 
   if (!isSignedIn) {
-    return <RedirectToSignIn />;
+    navigate("/sign-in");
+    return null;
   }
 
   return children;
@@ -143,7 +145,7 @@ function ClerkProviderWithRoutes() {
             <SignIn
               routing="path"
               path="/sign-in"
-              redirectUrl="/assistants"
+              afterSignInUrl="/assistants"
               signUpUrl="/sign-up"
             />
           }
@@ -154,7 +156,7 @@ function ClerkProviderWithRoutes() {
             <SignUp
               routing="path"
               path="/sign-up"
-              redirectUrl="/assistants"
+              afterSignUpUrl="/assistants"
               signInUrl="/sign-in"
             />
           }
