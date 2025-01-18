@@ -29,8 +29,7 @@ import DashboardLayout from "./DashboardLayout";
 import "../styles/scrollbar.css";
 import ActiveCallDetail from "./ui/ActiveCallDetail";
 import ButtonVapi from "./ui/ButtonVapi";
-import { Link } from "react-router-dom";
-
+ 
 const usePublicKeyInvalid = () => {
   const [showPublicKeyInvalidMessage, setShowPublicKeyInvalidMessage] =
     useState(false);
@@ -276,34 +275,34 @@ const AssistantPage = () => {
       },
     };
     try {
-    if (assistantName) {
-      const response = await axios.post(
-        "https://api.vapi.ai/assistant",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      if (assistantName) {
+        const response = await axios.post(
+          "https://api.vapi.ai/assistant",
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-      const newAssistant = response.data; // Assuming the response contains the new assistant data
+        const newAssistant = response.data; // Assuming the response contains the new assistant data
 
-      // Prepend the new assistant to the list
-      setAssistants((prevAssistants) => [newAssistant, ...prevAssistants]);
+        // Prepend the new assistant to the list
+        setAssistants((prevAssistants) => [newAssistant, ...prevAssistants]);
 
-      // Optionally set the new assistant as the selected one
-      setSelectedAssistant(newAssistant);
+        // Optionally set the new assistant as the selected one
+        setSelectedAssistant(newAssistant);
 
-      setShowCreateAssistant(false);
+        setShowCreateAssistant(false);
 
-      setSelectedTemplate("");
-      setAssistantCreated(true);
-      toast.success(`Assistant ${assistantName} created successfully`);
-    } else {
-      toast.error("Please enter the Assistant name");
-    }
+        setSelectedTemplate("");
+        setAssistantCreated(true);
+        toast.success(`Assistant ${assistantName} created successfully`);
+      } else {
+        toast.error("Please enter the Assistant name");
+      }
     } catch (error) {
       console.error("Error creating assistant:", error);
       toast.error("Failed to create assistant");
@@ -562,7 +561,7 @@ const AssistantPage = () => {
 
   return (
     <DashboardLayout>
-    <div className="min-h-screen  bg-white  text-gray-900 flex">
+      <div className="min-h-screen  bg-white  text-gray-900 flex">
         <AnimatePresence>
           {showCreateAssistant && (
             <>
@@ -622,7 +621,7 @@ const AssistantPage = () => {
                         />
                       </div>
 
-                       <div
+                      <div
                         className={`bg-white rounded-lg border ${
                           selectedTemplate === "blank"
                             ? "border-teal-500"

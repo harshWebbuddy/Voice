@@ -1,43 +1,46 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
 const TestimonialsSection = () => {
   const testimonials = [
     {
       logo: "/logos/cisco.svg",
-      quote: "VoiceAI takes the pain out of building powerful conversational experiences in a group setting. Building conversation agents is very much a \"team sport\" and VoiceAI makes it pleasant (even fun) to build systems that add value to external-facing customer use-cases.",
+      quote:
+        'VoiceAI takes the pain out of building powerful conversational experiences in a group setting. Building conversation agents is very much a "team sport" and VoiceAI makes it pleasant (even fun) to build systems that add value to external-facing customer use-cases.',
       author: {
         image: "/testimonials/victor.jpg",
         name: "Victor Algaze",
-        role: "Software Engineer"
-      }
+        role: "Software Engineer",
+      },
     },
     {
       logo: "/logos/trilogy.svg",
-      quote: "VoiceAI is a very versatile tool, combining natural conversations with strong API capabilities. The voice quality and emotional intelligence of the AI makes every interaction feel genuinely human.",
+      quote:
+        "VoiceAI is a very versatile tool, combining natural conversations with strong API capabilities. The voice quality and emotional intelligence of the AI makes every interaction feel genuinely human.",
       author: {
         image: "/testimonials/ciprian.jpg",
         name: "Ciprian Nastase",
-        role: "L3 Support AI Engineer"
-      }
+        role: "L3 Support AI Engineer",
+      },
     },
     {
       logo: "/logos/sanlam.svg",
-      quote: "VoiceAI provides us with massive acceleration, enabling us to experiment without fear. It allowed us to focus on value-adding activities like orchestration and building a robust, generative conversational architecture.",
+      quote:
+        "VoiceAI provides us with massive acceleration, enabling us to experiment without fear. It allowed us to focus on value-adding activities like orchestration and building a robust, generative conversational architecture.",
       author: {
         image: "/testimonials/andre.jpg",
         name: "Andre Fredericks",
-        role: "Chief Operating Officer"
-      }
-    }
+        role: "Chief Operating Officer",
+      },
+    },
   ];
 
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-1/2 left-0 w-[800px] h-[800px] bg-gradient-to-br from-violet-100/20 to-purple-100/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-1/2 right-0 w-[800px] h-[800px] bg-gradient-to-br from-blue-100/20 to-cyan-100/20 rounded-full blur-3xl"></div>
+        <div className="absolute -top-1/2 left-0 w-[800px] h-[800px] bg-gradient-to-br from-teal-100/20 to-teal-200/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-1/2 right-0 w-[800px] h-[800px] bg-gradient-to-br from-teal-200/20 to-teal-300/20 rounded-full blur-3xl"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -50,18 +53,18 @@ const TestimonialsSection = () => {
             transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 mb-6"
           >
-            <motion.span 
-              className="h-px w-8 bg-gradient-to-r from-violet-500 to-transparent"
+            <motion.span
+              className="h-px w-8 bg-gradient-to-r from-teal-500 to-transparent"
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
             />
-            <span className="text-sm font-medium bg-gradient-to-r from-violet-600 to-cyan-600 text-transparent bg-clip-text">
+            <span className="text-sm font-medium bg-gradient-to-r from-teal-600 to-teal-700 text-transparent bg-clip-text">
               Testimonials
             </span>
-            <motion.span 
-              className="h-px w-8 bg-gradient-to-l from-cyan-500 to-transparent"
+            <motion.span
+              className="h-px w-8 bg-gradient-to-l from-teal-500 to-transparent"
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
@@ -76,7 +79,7 @@ const TestimonialsSection = () => {
             className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
           >
             What Our{" "}
-            <span className="bg-gradient-to-r from-violet-600 to-cyan-600 text-transparent bg-clip-text">
+            <span className="bg-gradient-to-r from-teal-600 to-teal-700 text-transparent bg-clip-text">
               Customers Say
             </span>
           </motion.h2>
@@ -87,7 +90,8 @@ const TestimonialsSection = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-xl text-gray-600 max-w-3xl mx-auto"
           >
-            Discover how businesses are transforming their customer interactions with our Voice AI
+            Discover how businesses are transforming their customer interactions
+            with our Voice AI
           </motion.p>
         </div>
 
@@ -102,7 +106,7 @@ const TestimonialsSection = () => {
               transition={{ delay: index * 0.1 }}
               className="relative group"
             >
-              <div className="absolute inset-0 bg-white rounded-3xl transition-all duration-300 opacity-0 group-hover:opacity-100 -inset-x-4 -inset-y-4 bg-gradient-to-br from-violet-50 to-cyan-50"></div>
+              <div className="absolute inset-0 bg-white rounded-3xl transition-all duration-300 opacity-0 group-hover:opacity-100 -inset-x-4 -inset-y-4 bg-gradient-to-br from-teal-50 to-teal-100"></div>
 
               <div className="relative bg-white rounded-2xl p-8 border border-gray-100 shadow-xl shadow-gray-100/10">
                 {/* Company Logo */}
@@ -146,4 +150,4 @@ const TestimonialsSection = () => {
   );
 };
 
-export default TestimonialsSection; 
+export default TestimonialsSection;

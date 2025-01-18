@@ -7,7 +7,8 @@ import {
 } from "react-icons/ri";
 import { token } from "@/lib/constants";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Country {
@@ -28,14 +29,16 @@ interface Country {
 interface PhoneNumbersModalProps {
   showImportModal: boolean;
   setShowImportModal: (show: boolean) => void;
+  onImportSuccess: () => void;
 }
 
 const PhoneNumbersModal: React.FC<PhoneNumbersModalProps> = ({
   showImportModal,
   setShowImportModal,
+  onImportSuccess,
 }) => {
   const [selectedProvider, setSelectedProvider] = useState("Twilio");
-  const [fallbackCountryCode, setFallbackCountryCode] = useState("+1");
+  const [fallbackCountryCode, setFallbackCountryCode] = useState("");
   const [formData, setFormData] = useState({
     phoneNumber: "",
     accountSID: "",
@@ -54,10 +57,18 @@ const PhoneNumbersModal: React.FC<PhoneNumbersModalProps> = ({
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
+
+    const formattedPhoneNumber = formData.phoneNumber.startsWith(
+      fallbackCountryCode
+    )
+      ? formData.phoneNumber
+      : `${fallbackCountryCode}${formData.phoneNumber}`;
+
     const payload = {
       provider: "twilio",
       name: formData.label,
-      number: formData.phoneNumber,
+      number: formattedPhoneNumber,
       twilioAccountSid: formData.accountSID,
       twilioAuthToken: formData.authToken,
     };
@@ -74,15 +85,27 @@ const PhoneNumbersModal: React.FC<PhoneNumbersModalProps> = ({
         }
       );
 
+      console.log("Response:", response);
+
       if (response && response.data) {
         console.log("Success:", response.data);
         toast.success("Phone number successfully added!");
-        window.location.href = "/phone-settings";
+        setIsLoading(false);
+        setShowImportModal(false);
+        onImportSuccess();
+        setFormData({
+          phoneNumber: "",
+          accountSID: "",
+          authToken: "",
+          label: "",
+        });
       } else {
-        throw new Error("Unexpected response structure");
+        setIsLoading(false);
+        toast.error("Number Already Exists");
       }
     } catch (error) {
-      // Check if it's a response error or a network error
+      setIsLoading(false);
+
       if (error.response && error.response.status === 403) {
         toast.error("Forbidden: Please check your token and try again.");
       } else {
@@ -94,6 +117,7 @@ const PhoneNumbersModal: React.FC<PhoneNumbersModalProps> = ({
       }
     }
   };
+
   const getCountryCode = (country: Country) => {
     if (country.idd.root && country.idd.suffixes?.[0]) {
       return `${country.idd.root}${country.idd.suffixes[0]}`;
@@ -107,7 +131,7 @@ const PhoneNumbersModal: React.FC<PhoneNumbersModalProps> = ({
         const response = await axios.get<Country[]>(
           "https://restcountries.com/v3.1/all"
         );
-        const filteredCountries = response.data
+        const filteredCountries = response?.data
           .filter(
             (country: Country) => country.idd?.root && country.idd?.suffixes
           )
@@ -187,6 +211,7 @@ const PhoneNumbersModal: React.FC<PhoneNumbersModalProps> = ({
                     value={fallbackCountryCode}
                     onChange={(e) => setFallbackCountryCode(e.target.value)}
                   >
+                    <option value="">None</option>
                     {countries.map((country) => (
                       <option
                         key={country.cca2}
@@ -289,7 +314,20 @@ const PhoneNumbersModal: React.FC<PhoneNumbersModalProps> = ({
                 )}
               </button>
             </div>
-          </motion.div>
+          </motion.div>{" "}
+          <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            transition={Bounce}
+          />
         </motion.div>
       )}
     </AnimatePresence>

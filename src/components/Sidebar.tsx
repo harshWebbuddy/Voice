@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IconType } from "react-icons";
 import {
   RiDashboardLine,
@@ -10,9 +10,13 @@ import {
   RiApps2Line,
   RiArrowDownSLine,
   RiArrowLeftSLine,
+  RiLogoutBoxLine,
+  RiUserLine,
+  RiSettings4Line,
 } from "react-icons/ri";
 import "../styles/scrollbar.css";
-import { motion } from "framer-motion";
+import { useAuth, useUser, SignOutButton } from "@clerk/clerk-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface MenuItem {
   label: string;
@@ -28,22 +32,24 @@ const menuItems: MenuItem[] = [
   //   label: "Platform",
   //   icon: RiApps2Line,
   //   children: [
-      { label: "Assistants", icon: RiTeamLine, path: "/assistants" },
-      { label: "Phone Numbers", icon: RiPhoneLine, path: "/phone-numbers" },
-      { label: "Files", icon: RiFileList2Line, path: "/files" },
-      { label: "Call Logs", icon: RiPhoneLine, path: "/call-logs" },
-    // ],
+  { label: "Assistants", icon: RiTeamLine, path: "/assistants" },
+  { label: "Phone Numbers", icon: RiPhoneLine, path: "/phone-numbers" },
+  { label: "Files", icon: RiFileList2Line, path: "/files" },
+  { label: "Call Logs", icon: RiPhoneLine, path: "/call-logs" },
+  // ],
   // },
   // { label: "Voice Library", icon: RiVoiceprintLine, path: "/voice-library" },
 ];
-
 
 const Sidebar = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [expandedItems, setExpandedItems] = useState<string[]>(["Platform"]);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useUser();
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  // Simulate loading (you can replace this with your actual loading logic)
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -51,8 +57,20 @@ const Sidebar = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Show loader while loading
-  
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSignOut = () => {
+    navigate("/");
+  };
 
   const toggleExpand = (label: string) => {
     setExpandedItems((prev) =>
@@ -130,18 +148,76 @@ const Sidebar = () => {
       </div>
 
       {/* User Profile */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full   bg-teal-600   flex items-center justify-center mr-3">
-            <span className="text-sm font-medium text-white">S</span>
-          </div>
-          <div className="flex-1">
-            <div className="text-sm font-medium text-gray-900">
-              sanskar@web...
+      <div className="p-4 border-b border-gray-200" ref={menuRef}>
+        <div className="flex items-center justify-between">
+          <div
+            className="flex items-center cursor-pointer"
+            onClick={() => setShowUserMenu(!showUserMenu)}
+          >
+            <div className="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center mr-3">
+              {user?.imageUrl ? (
+                <img
+                  src={user.imageUrl}
+                  alt={user?.firstName || "User"}
+                  className="w-10 h-10 rounded-full"
+                />
+              ) : (
+                <span className="text-sm font-medium text-white">
+                  {user?.firstName?.[0] ||
+                    user?.emailAddresses?.[0]?.emailAddress?.[0]?.toUpperCase() ||
+                    "U"}
+                </span>
+              )}
             </div>
-            <div className="text-xs text-gray-500">Free Plan</div>
+            <div className="flex-1">
+              <div className="text-sm font-medium text-gray-900">
+                {user?.firstName
+                  ? `${user.firstName} ${user.lastName || ""}`
+                  : user?.emailAddresses?.[0]?.emailAddress}
+              </div>
+              <div className="text-xs text-gray-500">Free Plan</div>
+            </div>
+            <RiArrowDownSLine
+              className={`w-5 h-5 text-gray-400 ml-2 transition-transform ${
+                showUserMenu ? "rotate-180" : ""
+              }`}
+            />
           </div>
         </div>
+
+        {/* Dropdown Menu */}
+        <AnimatePresence>
+          {showUserMenu && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="absolute max-w-[200px] left-4 right-4 mt-2 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50"
+            >
+              <div className="py-1">
+                <Link
+                  to="/profile"
+                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  onClick={() => {
+                    setShowUserMenu(false);
+                  }}
+                >
+                  <RiUserLine className="w-4 h-4 mr-2" />
+                  Profile Settings
+                </Link>
+                <SignOutButton>
+                  <button
+                    onClick={handleSignOut}
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    <RiLogoutBoxLine className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </button>
+                </SignOutButton>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Menu Items */}
