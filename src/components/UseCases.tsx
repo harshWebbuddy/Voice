@@ -213,7 +213,7 @@ const UseCases = () => {
         </motion.div>
 
         {/* Tabs Section */}
-        <div className="flex justify-center mb-16">
+        {/* <div className="flex justify-center mb-16">
           <motion.div
             className="p-1 bg-white rounded-2xl shadow-lg shadow-gray-200/50 backdrop-blur-sm"
             initial={{ opacity: 0, y: 20 }}
@@ -247,7 +247,7 @@ const UseCases = () => {
               ))}
             </div>
           </motion.div>
-        </div>
+        </div> */}
 
         {/* Cards Grid */}
         <div className="relative">

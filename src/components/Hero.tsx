@@ -22,7 +22,7 @@ const Hero = () => {
 
   return (
     <div className="relative px-4 sm:px-6 lg:px-8 pb-20 pt-10">
-      <VoiceDoodles className="opacity-60" />
+      {/* <VoiceDoodles className="opacity-60" /> */}
 
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-16">

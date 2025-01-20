@@ -92,7 +92,7 @@ const ProductSection = () => {
       gradient: "from-rose-500 to-orange-500",
       preview: (
         <div className="bg-gradient-to-br from-rose-50/50 to-rose-100/30 backdrop-blur-sm rounded-xl p-4 h-[140px] border border-rose-100/50">
-          <div className="grid grid-cols-2 gap-2 h-full">
+          <div className="grid grid-cols-4 gap-2 h-full">
             {[
               { flag: "🇺🇸", lang: "English", accent: "US, UK, AU", delay: 0.2 },
               { flag: "🇪🇸", lang: "Spanish", accent: "ES, MX, AR", delay: 0.3 },

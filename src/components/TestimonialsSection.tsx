@@ -1,34 +1,35 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { FaUserCircle, FaRegSmile, FaRegStar } from "react-icons/fa";
 
 const TestimonialsSection = () => {
   const testimonials = [
     {
-      logo: "/logos/cisco.svg",
+      image: "/1.jpg",
       quote:
-        'VoiceAI takes the pain out of building powerful conversational experiences in a group setting. Building conversation agents is very much a "team sport" and VoiceAI makes it pleasant (even fun) to build systems that add value to external-facing customer use-cases.',
+        "VoiceAI takes the pain out of building powerful conversational experiences in a group setting. VoiceAI makes it pleasant (even fun) to build systems that add value to external-facing customer use-cases.",
       author: {
-        image: "/testimonials/victor.jpg",
+        icon: <FaUserCircle />,
         name: "Victor Algaze",
         role: "Software Engineer",
       },
     },
     {
-      logo: "/logos/trilogy.svg",
+      image: "/2.jpg",
       quote:
         "VoiceAI is a very versatile tool, combining natural conversations with strong API capabilities. The voice quality and emotional intelligence of the AI makes every interaction feel genuinely human.",
       author: {
-        image: "/testimonials/ciprian.jpg",
+        icon: <FaRegSmile />,
         name: "Ciprian Nastase",
         role: "L3 Support AI Engineer",
       },
     },
     {
-      logo: "/logos/sanlam.svg",
+      image: "/3.jpg",
       quote:
         "VoiceAI provides us with massive acceleration, enabling us to experiment without fear. It allowed us to focus on value-adding activities like orchestration and building a robust, generative conversational architecture.",
       author: {
-        image: "/testimonials/andre.jpg",
+        icon: <FaRegStar />,
         name: "Andre Fredericks",
         role: "Chief Operating Officer",
       },
@@ -110,12 +111,10 @@ const TestimonialsSection = () => {
 
               <div className="relative bg-white rounded-2xl p-8 border border-gray-100 shadow-xl shadow-gray-100/10">
                 {/* Company Logo */}
-                <div className="h-12 mb-8 flex items-center">
-                  <img
-                    src={testimonial.logo}
-                    alt="Company logo"
-                    className="h-8 object-contain"
-                  />
+                <div className="  mb-8 flex items-center">
+                  <div className="w-8 text-5xl h-8 rounded-full object-cover ring-2 ring-white shadow-lg">
+                    {testimonial.author.icon}
+                  </div>
                 </div>
 
                 {/* Quote */}
@@ -128,7 +127,7 @@ const TestimonialsSection = () => {
                 {/* Author */}
                 <div className="flex items-center gap-4">
                   <img
-                    src={testimonial.author.image}
+                    src={testimonial.image}
                     alt={testimonial.author.name}
                     className="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-lg"
                   />

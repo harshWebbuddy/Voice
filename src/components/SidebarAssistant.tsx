@@ -10,6 +10,8 @@ import "../styles/scrollbar.css";
 
 const SidebarAssistant = ({
   showCreateAssistant,
+  setTemplates,
+  setTemplates1,
   setShowCreateAssistant,
   searchQuery,
   setSearchQuery,
@@ -19,11 +21,16 @@ const SidebarAssistant = ({
   const filteredAssistants = assistants?.filter((assistant) =>
     assistant?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
+
   return (
     <div className="w-[320px] z-10 border-r border flex flex-col bg-gray-50">
       <div className="p-6">
         <button
-          onClick={() => setShowCreateAssistant(true)}
+          onClick={() => {
+            setShowCreateAssistant(true);
+            setTemplates(null);
+            setTemplates1(null);
+          }}
           className="w-full bg-teal-500 text-white px-5 py-3 rounded-lg flex items-center justify-center hover:bg-teal-600 transition-all mb-6 font-medium"
         >
           <RiAddLine className="mr-3" />

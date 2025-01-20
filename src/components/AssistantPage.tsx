@@ -29,7 +29,7 @@ import DashboardLayout from "./DashboardLayout";
 import "../styles/scrollbar.css";
 import ActiveCallDetail from "./ui/ActiveCallDetail";
 import ButtonVapi from "./ui/ButtonVapi";
- 
+
 const usePublicKeyInvalid = () => {
   const [showPublicKeyInvalidMessage, setShowPublicKeyInvalidMessage] =
     useState(false);
@@ -58,14 +58,12 @@ const AssistantPage = () => {
   const [provider2, setProvider2] = useState(false);
   const [modelOpen, setModelOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [addVoiceManually, setAddVoiceManually] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Model");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showCreateAssistant, setShowCreateAssistant] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [assistantName, setAssistantName] = useState("");
-  const [providerOpen, setProviderOpen] = useState(false);
   const [Providerid, setProviderid] = useState<string[]>([null]);
   const [assistants, setAssistants] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -91,6 +89,10 @@ const AssistantPage = () => {
   const vapi = new Vapi(publictoken);
   const [assistantCreated, setAssistantCreated] = useState(false);
   const [assistantDeleted, setAssistantDeleted] = useState(false);
+  const [name, setName] = useState("");
+  const [templates1, setTemplates1] = useState<any>(null);
+  const [templates, setTemplates] = useState<any>(null);
+  const [isInputEnabled, setIsInputEnabled] = useState(false);
 
   useEffect(() => {
     vapi.on("call-start", () => {
@@ -227,17 +229,26 @@ const AssistantPage = () => {
   useEffect(() => {
     if (assistantCreated || assistantDeleted) {
       fetchAssistants();
+
       setAssistantCreated(false);
       setAssistantDeleted(false);
     }
   }, [assistantCreated, assistantDeleted]);
 
   const handleTemplateSelect = (template: string) => {
-    setSelectedTemplate(template);
+    setSelectedTemplate((prevTemplate) =>
+      prevTemplate === template ? "" : template
+    );
+    if (template === "blank") {
+      setIsInputEnabled((prev) => !prev);
+    } else {
+      setIsInputEnabled(false);
+    }
   };
 
   const handleCreateAssistant = async () => {
     setLoading(true);
+
     const payload = {
       transcriber: {
         provider: "deepgram",
@@ -268,17 +279,22 @@ const AssistantPage = () => {
         provider: "twilio",
       },
       voicemailMessage: "This is the voicemail message",
-      endCallMessage: "Ending the call now.",
+      endCallMessage: templates1
+        ? templates1.endCallMessage
+        : "Ending the call now.",
       metadata: {
         assistantName: assistantName,
         createdBy: "UserName",
       },
     };
     try {
-      if (assistantName) {
-        const response = await axios.post(
+      if (assistantName || name) {
+        if (name) {
+          setTemplates1(templates);
+        }
+        const response = await axios.post<{ id: string }>(
           "https://api.vapi.ai/assistant",
-          payload,
+          templates1 ? templates1 : payload,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -286,9 +302,20 @@ const AssistantPage = () => {
             },
           }
         );
-
-        const newAssistant = response.data; // Assuming the response contains the new assistant data
-
+        console.log("API Response:", response.data);
+        if (name) {
+          await axios.put(
+            `https://api.vapi.ai/assistant/${response.data.id}`,
+            templates,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+        }
+        const newAssistant = response.data;
         // Prepend the new assistant to the list
         setAssistants((prevAssistants) => [newAssistant, ...prevAssistants]);
 
@@ -309,6 +336,11 @@ const AssistantPage = () => {
     } finally {
       setLoading(false);
     }
+    setIsInputEnabled(false);
+    setName("");
+    setAssistantName("");
+    setTemplates(null); 
+    setTemplates1(null);
   };
 
   const handleAssistantClick = async (id: string) => {
@@ -558,6 +590,179 @@ const AssistantPage = () => {
   const handleLogs = () => {
     window.location.href = "/call-logs";
   };
+  const handleBoxClick = async (payload) => {
+    try {
+      const response = await axios.post(
+        "https://api.vapi.ai/assistant",
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log("API Response:", response.data);
+    } catch (error) {
+      console.error("Error calling API:", error);
+    }
+  };
+  const handleTemplate1 = (props) => {
+    setName(props.name);
+    setTemplates(props);
+  };
+  const payloads = {
+    appointmentSetter: {
+      name: "Mary's Dental",
+      model: {
+        messages: [
+          {
+            role: "system",
+            content:
+              'You are a voice assistant for Mary\'s Dental, a dental office located at 123 North Face Place, Anaheim, California. The hours are 8 AM to 5 PM daily, but they are closed on Sundays.\n\nMary\'s dental provides dental services to the local Anaheim community. The practicing dentist is Dr. Mary Smith.\n\nYou are tasked with answering questions about the business, and booking appointments. If they wish to book an appointment, your goal is to gather necessary information from callers in a friendly and efficient manner like follows:\n\n1. Ask for their full name.\n2. Ask for the purpose of their appointment.\n3. Request their preferred date and time for the appointment.\n4. Confirm all details with the caller, including the date and time of the appointment.\n\n- Be sure to be kind of funny and witty!\n- Keep all your responses short and simple. Use casual language, phrases like "Umm...", "Well...", and "I mean" are preferred.\n- This is a voice conversation, so keep your responses short, like in a real conversation. Don\'t ramble for too long.',
+          },
+        ],
+        provider: "openai",
+        model: "gpt-3.5-turbo",
+      },
+      firstMessage:
+        "Hello, this is Mary from Mary's Dental. How can I assist you today?",
+      endCallMessage:
+        "Thank you for contacting Mary's Dental. Have a great day!",
+      clientMessages: [
+        "transcript",
+        "hang",
+        "function-call",
+        "speech-update",
+        "metadata",
+        "conversation-update",
+      ],
+      serverMessages: [
+        "end-of-call-report",
+        "status-update",
+        "hang",
+        "function-call",
+      ],
+      transcriber: { provider: "deepgram", model: "nova-2" },
+      voice: {
+        provider: "cartesia",
+        voiceId: "248be419-c632-4f23-adf1-5324ed7dbf1d",
+      },
+      voicemailMessage:
+        "Hey this is Mary from Mary's Dental. Please call back when you're available.",
+    },
+    customerSupportPayload: {
+      clientMessages: ["conversation-update", "function-call"],
+      endCallMessage: "Thank you for contacting us. Have a great day!",
+      endCallPhrases: ["goodbye"],
+      firstMessage: "Hello, this is Ava. How may I assist you today?",
+      model: {
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a voice assistant for providing empathetic and efficient customer support...",
+          },
+        ],
+        provider: "openai",
+        model: "gpt-3.5-turbo",
+        temperature: 0.7,
+      },
+      name: "Ava",
+      recordingEnabled: true,
+      serverMessages: ["hang", "model-output"],
+      transcriber: {
+        provider: "deepgram",
+        model: "general",
+        keywords: [],
+      },
+      voice: {
+        provider: "cartesia",
+        voiceId: "248be419-c632-4f23-adf1-5324ed7dbf1d",
+      },
+      voicemailMessage:
+        "Hey, this is Ava. Could you please call me back when you're free?",
+    },
+    inboundQAPayload: {
+      clientMessages: [
+        "transcript",
+        "hang",
+        "function-call",
+        "speech-update",
+        "metadata",
+        "conversation-update",
+      ],
+      endCallMessage:
+        "Thanks for reaching out to SmartHome Innovations. It was great assisting you. Have a wonderful day!",
+      endCallPhrases: ["bye for now", "talk soon"],
+      firstMessage:
+        "Hi there! I'm Leo, your go-to for any SmartHome Innovations queries. How can I assist you today?",
+      model: {
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are Leo, a friendly and knowledgeable voice assistant for SmartHome Innovations, providing support and answers to customer inquiries about SmartHome products and services.",
+          },
+        ],
+        provider: "openai",
+        model: "gpt-3.5-turbo",
+        temperature: 0.7,
+      },
+      name: "Leo",
+      recordingEnabled: true,
+      serverMessages: [
+        "end-of-call-report",
+        "status-update",
+        "hang",
+        "function-call",
+      ],
+      voice: {
+        provider: "cartesia",
+        voiceId: "248be419-c632-4f23-adf1-5324ed7dbf1d",
+      },
+      voicemailMessage:
+        "Hi, this is Leo from SmartHome Innovations. Could you please reach back at your earliest convenience?",
+    },
+    elenyaPayload: {
+      clientMessages: [
+        "transcript",
+        "hang",
+        "function-call",
+        "speech-update",
+        "metadata",
+        "conversation-update",
+      ],
+      endCallMessage:
+        "Farewell, traveler. May the winds guide you and the earth protect you on your path.",
+      endCallPhrases: ["farewell", "until we meet again"],
+      firstMessage:
+        "Greetings, traveler. This is Elenya, the Verdant Guardian. How may I assist you on your journey through the natural world?",
+      model: {
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are Elenya, the Verdant Guardian, a wise and mystical voice assistant guiding users with knowledge of the natural world, its flora, fauna, and mysteries. Your tone is serene, nurturing, and poetic.",
+          },
+        ],
+        provider: "openai",
+        model: "gpt-3.5-turbo",
+        temperature: 0.7,
+      },
+      name: "Elenya",
+      recordingEnabled: true,
+      serverMessages: [
+        "end-of-call-report",
+        "status-update",
+        "hang",
+        "function-call",
+      ],
+      voice: {
+        provider: "cartesia",
+        voiceId: "248be419-c632-4f23-adf1-5324ed7dbf1d",
+      },
+      voicemailMessage:
+        "Greetings, traveler. This is Elenya, the Verdant Guardian. I tried to reach you but found your message stone instead. Please call me back when you can, and we shall continue our journey through the natural world.",
+    },
+  };
 
   return (
     <DashboardLayout>
@@ -604,23 +809,23 @@ const AssistantPage = () => {
                         assistant.
                       </p>
 
-                      {/* Assistant Name */}
-                      <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-medium mb-2">
-                          Assistant Name{" "}
-                          <span className="text-amber-500 ml-1">
-                            (This can be adjusted at any time after creation.)
-                          </span>
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="test b1"
-                          value={assistantName}
-                          onChange={(e) => setAssistantName(e.target.value)}
-                          className="w-full bg-white text-gray-900 rounded-lg px-4 py-2.5 border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent placeholder-gray-400"
-                        />
-                      </div>
-
+                      {isInputEnabled && (
+                        <div className="mb-6">
+                          <label className="block text-gray-700 text-sm font-medium mb-2">
+                            Assistant Name{" "}
+                            <span className="text-amber-500 ml-1">
+                              (This can be adjusted at any time after creation.)
+                            </span>
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="test b1"
+                            value={assistantName || name}
+                            onChange={(e) => setAssistantName(e.target.value)}
+                            className="w-full bg-white text-gray-900 rounded-lg px-4 py-2.5 border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent placeholder-gray-400"
+                          />
+                        </div>
+                      )}
                       <div
                         className={`bg-white rounded-lg border ${
                           selectedTemplate === "blank"
@@ -645,9 +850,102 @@ const AssistantPage = () => {
                           </div>
                         </div>
                       </div>
+
+                      {/* Conditionally render the input field */}
                     </div>
                   </div>
+                  <div>
+                    <div className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3">
+                      QUICKSTART
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div
+                        className="bg-white rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors border border-gray-200"
+                        onClick={() =>
+                          handleTemplate1(payloads.appointmentSetter)
+                        }
+                      >
+                        <div className="flex flex-col h-full">
+                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mb-3">
+                            <RiTimeLine className="w-5 h-5 text-blue-600" />
+                          </div>
+                          <h4 className="text-gray-900 font-medium mb-2">
+                            Appointment Setter
+                          </h4>
+                          <p className="text-gray-500 text-sm flex-grow">
+                            Designed for dental practices to demonstrate setting
+                            appointments. It streamlines scheduling, answers
+                            common questions, and provides service information.
+                          </p>
+                        </div>
+                      </div>
 
+                      {/* Customer Support */}
+                      <div
+                        className="bg-white rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors border border-gray-200"
+                        onClick={() =>
+                          handleTemplate1(payloads.customerSupportPayload)
+                        }
+                      >
+                        <div className="flex flex-col h-full">
+                          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mb-3">
+                            <RiCustomerService2Line className="w-5 h-5 text-green-600" />
+                          </div>
+                          <h4 className="text-gray-900 font-medium mb-2">
+                            Customer Support
+                          </h4>
+                          <p className="text-gray-500 text-sm flex-grow">
+                            A versatile template designed with a perfect mix of
+                            emotional intelligence and technical knowledge.
+                            Ideal for empathetic, efficient customer support.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Inbound Q/A */}
+                      <div
+                        className="bg-white rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors border border-gray-200"
+                        onClick={() =>
+                          handleTemplate1(payloads.inboundQAPayload)
+                        }
+                      >
+                        <div className="flex flex-col h-full">
+                          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mb-3">
+                            <RiQuestionLine className="w-5 h-5 text-purple-600" />
+                          </div>
+                          <h4 className="text-gray-900 font-medium mb-2">
+                            Inbound Q/A
+                          </h4>
+                          <p className="text-gray-500 text-sm flex-grow">
+                            An inbound call agent example designed to provide
+                            comprehensive support for SmartHome Innovations.
+                            With a deep understanding of product details and
+                            troubleshooting.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Game NPC */}
+                      <div
+                        className="bg-white rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors border border-gray-200"
+                        onClick={() => handleTemplate1(payloads.elenyaPayload)}
+                      >
+                        <div className="flex flex-col h-full">
+                          <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center mb-3">
+                            <RiGamepadLine className="w-5 h-5 text-amber-600" />
+                          </div>
+                          <h4 className="text-gray-900 font-medium mb-2">
+                            Game NPC
+                          </h4>
+                          <p className="text-gray-500 text-sm flex-grow">
+                            An assistant for demonstrating an in-game NPC.
+                            Elenya is designed to offer guidance, lore, and
+                            insights into the mysteries of the natural world.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div className="fixed bottom-0 left-0 w-1/3 p-6 bg-white border-gray-500   border-r-2  ">
                     <div className="flex justify-between items-center">
                       <button
@@ -703,6 +1001,8 @@ const AssistantPage = () => {
 
         <div className="w-[320px] border-r border-gray-200 flex flex-col bg-gray-50">
           <SidebarAssistant
+            setTemplates1={setTemplates1}
+            setTemplates={setTemplates}
             showCreateAssistant={showCreateAssistant}
             setShowCreateAssistant={setShowCreateAssistant}
             searchQuery={searchQuery}
@@ -881,7 +1181,7 @@ const AssistantPage = () => {
                             className="w-full h-32 bg-white text-gray-900 rounded-lg p-4 border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none hover:border-gray-300 transition-colors"
                             placeholder="Enter first message"
                             onChange={(e) => setFirstMessage(e.target.value)}
-                            value={firstMessage}
+                            value={templates1?.firstMessage || firstMessage}
                           />
                         </div>
 
@@ -901,7 +1201,9 @@ const AssistantPage = () => {
                             className="w-full h-32 bg-white text-gray-900 rounded-lg p-4 border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none hover:border-gray-300 transition-colors"
                             placeholder="Enter system prompt"
                             onChange={(e) => setSystemMessage(e.target.value)}
-                            value={systemMessage}
+                            value={
+                              templates1?.voicemailMessage || systemMessage
+                            }
                           />
                         </div>
                         <div>
