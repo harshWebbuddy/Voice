@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 
 interface Demo {
@@ -14,6 +14,7 @@ interface Demo {
 const DemoSection = () => {
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const demos: Demo[] = [
     {
@@ -23,7 +24,7 @@ const DemoSection = () => {
       icon: "💼",
       description:
         "Experience how our AI handles mortgage inquiries with precision and empathy",
-      audioUrl: "/demos/lead-qualification.mp3",
+      audioUrl: "/voices/1.mp3",
       gradient: "from-teal-400 to-teal-500",
     },
     {
@@ -33,7 +34,7 @@ const DemoSection = () => {
       icon: "🛡️",
       description:
         "Listen to seamless insurance claim processing and policy assistance",
-      audioUrl: "/demos/customer-support.mp3",
+        audioUrl: "/voices/2.mp3",
       gradient: "from-teal-500 to-teal-600",
     },
     {
@@ -43,10 +44,24 @@ const DemoSection = () => {
       icon: "🏥",
       description:
         "See how our AI schedules medical appointments efficiently and professionally",
-      audioUrl: "/demos/appointment-booking.mp3",
+        audioUrl: "/voices/3.mp3",
       gradient: "from-teal-600 to-teal-700",
     },
   ];
+
+  const handlePlayPause = (demoId: string, audioUrl: string) => {
+    if (activeDemo === demoId && isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+    } else {
+      if (audioRef.current) {
+        audioRef.current.src = audioUrl;
+        audioRef.current.play();
+      }
+      setActiveDemo(demoId);
+      setIsPlaying(true);
+    }
+  };
 
   return (
     <div className="py-24 relative overflow-hidden bg-gradient-to-b from-white to-gray-50">
@@ -175,10 +190,7 @@ const DemoSection = () => {
 
                 {/* Play Button */}
                 <motion.button
-                  onClick={() => {
-                    setActiveDemo(demo.id);
-                    setIsPlaying(!isPlaying);
-                  }}
+                  onClick={() => handlePlayPause(demo.id, demo.audioUrl)}
                   className={`w-full py-3.5 px-4 rounded-xl text-sm font-medium transition-all relative overflow-hidden
                     ${
                       activeDemo === demo.id && isPlaying
@@ -228,6 +240,7 @@ const DemoSection = () => {
           ))}
         </div>
       </div>
+      <audio ref={audioRef} />
     </div>
   );
 };

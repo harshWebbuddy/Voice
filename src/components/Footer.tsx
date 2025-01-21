@@ -5,16 +5,16 @@ const Footer = () => {
   const navigation = {
     company: [
       { name: "About", href: "#" },
-      { name: "Team", href: "#" },
-      { name: "Careers", href: "#" },
-      { name: "Blog", href: "#" },
+      // { name: "Team", href: "#" },
+      // { name: "Careers", href: "#" },
+      { name: "Blog", href: "/blogs" },
     ],
     product: [
-      { name: "Use Cases", href: "#" },
-      { name: "Documentation", href: "#" },
+      // { name: "Use Cases", href: "#" },
+      // { name: "Documentation", href: "#" },
       { name: "Pricing", href: "#" },
-      { name: "Affiliates", href: "#" },
-      { name: "FAQ", href: "#" },
+      // { name: "Affiliates", href: "#" },
+      { name: "FAQ", href: "#faq" },
     ],
     socials: [
       { name: "LinkedIn", href: "#" },

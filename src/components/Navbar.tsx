@@ -3,9 +3,29 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const HandleSignIn = () => {
-    window.location.href = "/assistants";
-  
+    window.location.href = "/sign-up";
   };
+
+  const scrollToUseCases = (e) => {
+    e.preventDefault();
+    const element = document.getElementById("use-cases");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      // Update URL without page reload
+      window.history.pushState(null, "", "/#use-cases");
+    }
+  };
+
+  const scrollToFAQ = (e) => {
+    e.preventDefault();
+    const element = document.getElementById("faq");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      // Update URL without page reload
+      window.history.pushState(null, "", "/#faq");
+    }
+  };
+
   return (
     <>
       <nav className="relative z-50 bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 shadow-lg">
@@ -26,7 +46,8 @@ const Navbar = () => {
               {/* Navigation Links */}
               <div className="hidden md:flex items-center space-x-8">
                 <a
-                  href="#"
+                  href="#use-cases"
+                  onClick={scrollToUseCases}
                   className="text-white hover:text-teal-200 transition-colors relative group"
                 >
                   Use Cases
@@ -43,18 +64,26 @@ const Navbar = () => {
                   href="#"
                   className="text-white hover:text-teal-200 transition-colors relative group"
                 >
-                  Careers
+                  Pricing
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-teal-200 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
+                </a>
+                <a
+                  href="#faq"
+                  onClick={scrollToFAQ}
+                  className="text-white hover:text-teal-200 transition-colors relative group"
+                >
+                  Faq
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-teal-200 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                 </a>
               </div>
 
               {/* CTA Button */}
-              <div 
-                 onClick={HandleSignIn}
-                  className="bg-teal-200 hover:bg-teal-300 text-teal-900 px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-lg hover:shadow-xl"
-                >
-                  Get started for free
-               </div>
+              <div
+                onClick={HandleSignIn}
+                className="bg-teal-200 hover:bg-teal-300 text-teal-900 px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-lg hover:shadow-xl cursor-pointer"
+              >
+                Get started for free
+              </div>
             </div>
           </div>
         </div>

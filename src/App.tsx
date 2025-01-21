@@ -6,7 +6,13 @@ import {
   RedirectToSignIn,
   useUser,
 } from "@clerk/clerk-react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import { motion } from "framer-motion";
 import AssistantPage from "./components/AssistantPage";
 import PhoneNumbers from "./pages/PhoneNumbers";
@@ -16,6 +22,10 @@ import CallLogs from "./pages/CallLogs";
 import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home";
 import ProfilePage from "./components/ProfilePage";
+import SignUpPage from "./components/SignUpPage.tsx";
+import Blogs from "./pages/Blogs.tsx";
+import Blogpage from "./components/Blog1.tsx";
+import Company from "./pages/Company.tsx";
 
 const LoadingScreen = () => {
   return (
@@ -120,6 +130,7 @@ function RequireAuth({ children }: { children: React.ReactElement }) {
 const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   const { isSignedIn } = useUser();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (isSignedIn) {
@@ -130,16 +141,24 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md relative">
-        {/* Background blur effect */}
-        <div className="absolute inset-0 bg-white/90 backdrop-blur-xl rounded-3xl" />
+        {/* Removed the border effect by eliminating the gradient and background layers */}
+        <div className="relative p-8">
+          {children}
 
-        {/* Gradient border */}
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-teal-400/20 to-teal-600/20 p-[1px]">
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-gray-50 to-white/80 backdrop-blur-xl" />
+          {location.pathname === "/sign-in" && (
+            <div className="mt-4 text-center">
+              <p className="text-sm text-gray-500">
+                Don't have an account?{" "}
+                <a
+                  href="/sign-up"
+                  className="text-teal-500 hover:text-teal-600"
+                >
+                  Sign Up
+                </a>
+              </p>
+            </div>
+          )}
         </div>
-
-        {/* Content */}
-        <div className="relative p-8">{children}</div>
       </div>
     </div>
   );
@@ -200,7 +219,7 @@ function ClerkProviderWithRoutes() {
           path="/sign-up/*"
           element={
             <AuthWrapper>
-              <SignUp routing="path" path="/sign-up" signInUrl="/sign-in" />
+              <SignUpPage />
             </AuthWrapper>
           }
         />
@@ -212,6 +231,9 @@ function ClerkProviderWithRoutes() {
             </RequireAuth>
           }
         />
+        <Route path="/blogs" element={<Blogs />} />{" "}
+        <Route path="/blogs1" element={<Blogpage />} />
+        <Route path="/Company" element={<Company />} />
         <Route
           path="/phone-numbers"
           element={
@@ -219,7 +241,7 @@ function ClerkProviderWithRoutes() {
               <PhoneNumbers />
             </RequireAuth>
           }
-        />
+        />{" "}
         <Route
           path="/call-logs"
           element={

@@ -1,6 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FaUserCircle, FaRegSmile, FaRegStar } from "react-icons/fa";
+import {
+  FaUserCircle,
+  FaRegSmile,
+  FaRegStar,
+  FaCode,
+  FaHeadset,
+  FaBriefcase,
+} from "react-icons/fa";
 
 const TestimonialsSection = () => {
   const testimonials = [
@@ -9,7 +16,7 @@ const TestimonialsSection = () => {
       quote:
         "VoiceAI takes the pain out of building powerful conversational experiences in a group setting. VoiceAI makes it pleasant (even fun) to build systems that add value to external-facing customer use-cases.",
       author: {
-        icon: <FaUserCircle />,
+        icon: <FaCode />,
         name: "Victor Algaze",
         role: "Software Engineer",
       },
@@ -19,7 +26,7 @@ const TestimonialsSection = () => {
       quote:
         "VoiceAI is a very versatile tool, combining natural conversations with strong API capabilities. The voice quality and emotional intelligence of the AI makes every interaction feel genuinely human.",
       author: {
-        icon: <FaRegSmile />,
+        icon: <FaHeadset />,
         name: "Ciprian Nastase",
         role: "L3 Support AI Engineer",
       },
@@ -29,7 +36,7 @@ const TestimonialsSection = () => {
       quote:
         "VoiceAI provides us with massive acceleration, enabling us to experiment without fear. It allowed us to focus on value-adding activities like orchestration and building a robust, generative conversational architecture.",
       author: {
-        icon: <FaRegStar />,
+        icon: <FaBriefcase />,
         name: "Andre Fredericks",
         role: "Chief Operating Officer",
       },

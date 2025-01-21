@@ -1,0 +1,268 @@
+@keyframes drawArrow {
+    0% {
+      stroke-dasharray: 0, 400;
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dasharray: 400, 0;
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  .arrow-path {
+    fill: none;
+    stroke: green;
+    stroke-width: 2;
+    stroke-dasharray: 400, 0;
+    animation: drawArrow 4s ease forwards;
+  }
+#path1, #path2 {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw 4s forwards;
+  }
+  
+  #path2 {
+    animation-delay: 2s;
+  }
+  
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  #image1, #image2 {
+    animation: showImage 1s forwards;
+  }
+  
+  #image1 {
+    animation-delay: 4s;
+  }
+  
+  #image2 {
+    animation-delay: 6s;
+  }
+  
+  @keyframes showImage {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .drawing-effect path {
+  stroke-dasharray: 2500;
+  stroke-dashoffset: 2500;
+  animation: draw 7s ease-in-out forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes drawPath {
+  from {
+    stroke-dasharray: 0, 1000;
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dasharray: 1000, 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+.drawing-effect2 {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawPath 8s ease-in-out forwards;
+}
+.drawing-effect4 {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawPath 12s ease-in-out forwards;
+}
+.doodle-effect {
+  stroke-width: 2;
+  stroke: #FF4040;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 4 2;
+}
+.doodle-effectgreen {
+  stroke-width: 2;
+  stroke: #034737;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 4 2;
+}
+.doodle-effect2 {
+  stroke-width: 2;
+  stroke: #25B72E;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 4 2;
+}
+.drawing-svg2 {
+  stroke: #034737; /* Your stroke color */
+  stroke-width: 1.3044;
+  stroke-dasharray: 1000; /* A large value to ensure the stroke covers all the path */
+  stroke-dashoffset: 1000; /* Start with the stroke hidden */
+  animation: draw 12s ease forwards; /* Adjust duration as needed */
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0; /* Draw the stroke */
+  }
+}
+.drawing-svg .drawing-path,
+.drawing-svg .drawing-rect,
+.drawing-svg .drawing-circle {
+  stroke-dasharray: 1000; /* Adjust value based on path length */
+  stroke-dashoffset: 1000; /* Same as above */
+  animation: draw 5s forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.drawing-svg .drawing-circle {
+  animation: draw-circle 5s forwards;
+}
+
+@keyframes draw-circle {
+  0% {
+    stroke-dasharray: 0, 42.4; /* Circle perimeter */
+    stroke-dashoffset: 42.4;
+  }
+  100% {
+    stroke-dasharray: 42.4, 0;
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.loading-svg {
+  animation: pulse 2s infinite;
+}
+.doodle-container {
+  position: relative;
+  display: inline-block;
+}
+
+.doodle-image {
+  width: 300px; /* Adjust size as needed */
+  height: auto;
+  animation: doodleAnimation 5s infinite;
+}
+
+@keyframes doodleAnimation {
+  0% {
+      transform: translate(0, 0);
+      filter: none;
+  }
+  25% {
+      transform: translate(-5px, 5px) rotate(-1deg);
+      filter: blur(1px);
+  }
+  50% {
+      transform: translate(5px, -5px) rotate(1deg);
+      filter: blur(2px);
+  }
+  75% {
+      transform: translate(-5px, 5px) rotate(-1deg);
+      filter: blur(1px);
+  }
+  100% {
+      transform: translate(0, 0);
+      filter: none;
+  }
+}
+.drawing-effect path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw 4s ease forwards;
+}
+
+.drawing-effect circle {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: drawCircle 2s ease forwards 1s;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes drawCircle {
+  to {
+    stroke-dashoffset: 0;
+  }
+} .drawing-effecthero path {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: drawhero 10s ease forwards;
+    }
+
+    .drawing-effecthero circle {
+      stroke-dasharray: 500;
+      stroke-dashoffset: 500;
+      animation: drawCirclehero 8s ease forwards 1s;
+    }
+
+    @keyframes drawhero {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes drawCirclehero {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    @keyframes imageEffect {
+  0% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+}
+
+.animate-image-effect {
+  animation: imageEffect 2s ease-in-out infinite;
+}
+
+/* Animation for SVG lines */
