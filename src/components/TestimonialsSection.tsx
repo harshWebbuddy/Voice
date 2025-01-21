@@ -118,11 +118,7 @@ const TestimonialsSection = () => {
 
               <div className="relative bg-white rounded-2xl p-8 border border-gray-100 shadow-xl shadow-gray-100/10">
                 {/* Company Logo */}
-                <div className="  mb-8 flex items-center">
-                  <div className="w-8 text-5xl h-8 rounded-full object-cover ring-2 ring-white shadow-lg">
-                    {testimonial.author.icon}
-                  </div>
-                </div>
+               
 
                 {/* Quote */}
                 <div className="mb-8">
